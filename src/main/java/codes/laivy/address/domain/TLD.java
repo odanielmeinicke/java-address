@@ -33,6 +33,9 @@ import java.util.*;
  * @see CharSequence
  * @see Objects
  * @see String
+ *
+ * @author Daniel Meinicke (Laivy)
+ * @since 1.1
  */
 @SuppressWarnings("NonAsciiCharacters")
 public final class TLD implements CharSequence {
