@@ -35,6 +35,9 @@ import java.util.Objects;
  * @see CharSequence
  * @see java.util.regex.Pattern
  * @see Objects
+ *
+ * @author Daniel Meinicke (Laivy)
+ * @since 1.1
  */
 public final class Subdomain implements CharSequence {
 

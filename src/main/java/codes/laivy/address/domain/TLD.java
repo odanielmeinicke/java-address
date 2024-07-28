@@ -1,35 +1,84 @@
-package codes.laivy.t1.font;
+package codes.laivy.address.domain;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DecimalFormat;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * Represents a Top-Level Domain (TLD) as defined by the Internet Assigned Numbers Authority (IANA).
+ *
+ * <p>A TLD is the last segment of a domain name, located after the last dot ('.'). It signifies the highest level in the
+ * hierarchical Domain Name System (DNS) of the Internet. Examples of TLDs include generic TLDs (gTLDs) like "com", "net",
+ * and "org", country code TLDs (ccTLDs) like "uk", "jp", and "br", and new gTLDs like "app", "dev", and "xyz".</p>
+ *
+ * <p>This class provides mechanisms to validate and handle TLDs, ensuring they conform to known standards and formats.
+ * It also supports validation against the list of TLDs officially recognized by IANA.</p>
+ *
+ * <p>Instances of this class are immutable and thread-safe.</p>
+ *
+ * <p>Usage examples:</p>
+ * <pre>
+ * {@code
+ * TLD tld = TLD.parse("com");
+ * boolean isValid = TLD.validate("com");
+ * boolean exists = TLD.exists("com");
+ * }
+ * </pre>
+ *
+ * @see CharSequence
+ * @see Objects
+ * @see String
+ */
 @SuppressWarnings("NonAsciiCharacters")
 public final class TLD implements CharSequence {
 
     // Static initializers
 
+    private static final @NotNull Map<String, TLD> map = new HashMap<>();
+
+    static {
+        for (@NotNull Field field : TLD.class.getDeclaredFields()) try {
+            field.setAccessible(true);
+
+            if (Modifier.isStatic(field.getModifiers())) {
+                @NotNull TLD tld = (TLD) field.get(null);
+                map.put(tld.code.toLowerCase(), tld);
+            }
+        } catch (@NotNull Throwable throwable) {
+            throw new RuntimeException("cannot load TLD field value '" + field + "'");
+        }
+    }
+
     /**
-     * Validates if the provided TLD name exists (is known by IANA)
+     * Parses a given string into a {@link TLD} object.
+     *
+     * @param string the string to parse
+     * @return a new {@link TLD} object
+     * @throws NullPointerException if the string is not a valid registered TLD
+     */
+    public static @NotNull TLD parse(@NotNull String string) {
+        string = string.toLowerCase();
+        string = string.replace("-", "_").toUpperCase();
+
+        if (map.containsKey(string)) {
+            return map.get(string);
+        } else {
+            throw new NullPointerException("there's no registered TLD named '" + string + "'");
+        }
+    }
+
+    /**
+     * Validates if the provided TLD name exists (is known by IANA).
      *
      * @param string the string to validate
-     * @return {@code true} if the TLD exists and knows by IANA, {@code false} otherwise
+     * @return {@code true} if the TLD exists and is known by IANA, {@code false} otherwise
      */
-    public static boolean exists(@NotNull String string) {
+    public static boolean isKnown(@NotNull String string) {
         if (validate(string)) {
             return Arrays.stream(TLD.class.getDeclaredFields()).anyMatch(field -> field.getName().equals(string.replace("-", "_").toUpperCase()));
         } else {
@@ -39,6 +88,10 @@ public final class TLD implements CharSequence {
 
     /**
      * Validates whether a given string is a valid TLD.
+     *
+     * <p>A valid TLD is between 2 and 63 characters long, does not contain underscores ('_'), and only contains valid
+     * characters. Valid characters include letters, numbers, and hyphens ('-'), with some exceptions for specific Unicode
+     * characters.</p>
      *
      * @param string the string to validate
      * @return {@code true} if the string is a valid TLD, {@code false} otherwise
@@ -18988,7 +19041,7 @@ public final class TLD implements CharSequence {
      * </ul>
      *
      */
-    public static final @NotNull TLD ᲒᲔ = new TLD("გე", Type.COUNTRY_CODE, "Information Technologies Development Center (ITDC)", LocalDate.parse("2011-02-11"), LocalDate.parse("2024-06-26"));
+    public static final @NotNull TLD _GE = new TLD("გე", Type.COUNTRY_CODE, "Information Technologies Development Center (ITDC)", LocalDate.parse("2011-02-11"), LocalDate.parse("2024-06-26"));
 
     /**
      * <h2>Registry Information</h2>
@@ -19001,7 +19054,7 @@ public final class TLD implements CharSequence {
      * </ul>
      *
      */
-    public static final @NotNull TLD 机构 = new TLD("机构", Type.GENERIC, "Public Interest Registry", LocalDate.parse("2014-02-27"), LocalDate.parse("2022-06-03"));
+    public static final @NotNull TLD _机构 = new TLD("机构", Type.GENERIC, "Public Interest Registry", LocalDate.parse("2014-02-27"), LocalDate.parse("2022-06-03"));
 
     /**
      * <h2>Registry Information</h2>
@@ -19837,11 +19890,11 @@ public final class TLD implements CharSequence {
     /**
      * Constructs a {@link TLD} object with the given string.
      *
-     * @param code the code representing the TLD ("com", "net" or "org" as example)
+     * @param code the code representing the TLD (e.g., "com", "net", or "org")
      * @param type the TLD type
      * @param provider the TLD provider or null if not assigned
-     * @param registration the local date this TLD has been registered at IANA. The registration can be null due to .eh TLD name that doesn't provides one.
-     * @param update the local date this TLD has been last updated at IANA
+     * @param registration the local date this TLD was registered at IANA. Can be null if the TLD does not provide one (e.g., .eh)
+     * @param update the local date this TLD was last updated at IANA
      * @throws IllegalArgumentException if the code is not a valid TLD pattern
      */
     private TLD(@NotNull String code, @NotNull Type type, @Nullable String provider, @Nullable LocalDate registration, @NotNull LocalDate update) {
@@ -19859,7 +19912,9 @@ public final class TLD implements CharSequence {
     // Getters
 
     /**
-     * The TLD type represents which type this TLD assigns
+     * Returns the TLD type.
+     *
+     * <p>The TLD type represents the category of the TLD, such as generic, sponsored, country code, infrastructure, generic restricted, or test.</p>
      *
      * @return the TLD type
      */
@@ -19868,28 +19923,33 @@ public final class TLD implements CharSequence {
     }
 
     /**
-     * The TLD provider is the owner company that created and registered this TLD officially.
-     * Can be null because some TLDs have a "Not Assigned" provider.
+     * Returns the TLD provider.
      *
-     * @return the assigned TLD provider, or null if not assigned.
+     * <p>The TLD provider is the entity that manages the TLD. This can be null for some TLDs where the provider is not assigned.</p>
+     *
+     * @return the assigned TLD provider, or null if not assigned
      */
     public @Nullable String getProvider() {
         return provider;
     }
 
     /**
-     * This method represents the date this TLD has been registered and created at IANA
+     * Returns the registration date of the TLD.
      *
-     * @return the local date object this TLD has been created. Can be null (see {@link #EH})
+     * <p>This method represents the date the TLD was registered and created at IANA. It can be null for certain TLDs.</p>
+     *
+     * @return the local date the TLD was created, or null if not available
      */
     public @UnknownNullability LocalDate getRegistration() {
         return registration;
     }
 
     /**
-     * This method represents the date this TLD has been last updated at IANA
+     * Returns the last update date of the TLD.
      *
-     * @return the local date object this TLD has been last updated.
+     * <p>This method represents the date the TLD was last updated at IANA.</p>
+     *
+     * @return the local date the TLD was last updated
      */
     public @NotNull LocalDate getLastUpdate() {
         return update;
@@ -19945,12 +20005,12 @@ public final class TLD implements CharSequence {
     // Modules
 
     /**
-     * Validates if this TLD name exists (is known by IANA)
+     * Validates if this TLD name exists (is known by IANA).
      *
-     * @return {@code true} if the TLD exists and knows by IANA, {@code false} otherwise
+     * @return {@code true} if the TLD exists and is known by IANA, {@code false} otherwise
      */
-    public boolean exists() {
-        return exists(toString());
+    public boolean isKnown() {
+        return isKnown(toString());
     }
 
     // Implementations
@@ -19991,12 +20051,98 @@ public final class TLD implements CharSequence {
 
     // Classes
 
+    /**
+     * Represents the types of Top-Level Domains (TLDs) as classified by the Internet Assigned Numbers Authority (IANA).
+     *
+     * <p>Each TLD is categorized into one of the following types based on its purpose and the policies governing its use.</p>
+     *
+     * <p>The types are:</p>
+     * <ul>
+     *   <li>{@link #GENERIC GENERIC} - Generic TLDs intended for general use without restrictions.</li>
+     *   <li>{@link #SPONSORED SPONSORED} - Sponsored TLDs associated with a particular community or interest group, governed by specific rules.</li>
+     *   <li>{@link #COUNTRY_CODE COUNTRY_CODE} - Country Code TLDs (ccTLDs) assigned to specific countries or territories.</li>
+     *   <li>{@link #INFRASTRUCTURE INFRASTRUCTURE} - Infrastructure TLDs used for technical infrastructure purposes.</li>
+     *   <li>{@link #GENERIC_RESTRICTED GENERIC_RESTRICTED} - Generic restricted TLDs with specific restrictions on registration and use.</li>
+     *   <li>{@link #TEST TEST} - Test TLDs used for testing purposes, not intended for production use.</li>
+     * </ul>
+     */
     public enum Type {
+        /**
+         * Generic Top-Level Domains (gTLDs).
+         *
+         * <p>gTLDs are intended for general use and are not restricted to any particular community or geographic region.
+         * These domains can be used by anyone for any purpose, subject to availability. Examples include:</p>
+         * <ul>
+         *   <li><b>.com</b> - Originally intended for commercial entities, now used broadly.</li>
+         *   <li><b>.net</b> - Originally intended for network-related entities, now used broadly.</li>
+         *   <li><b>.org</b> - Originally intended for non-profit organizations, now used broadly.</li>
+         *   <li><b>.info</b> - Intended for informational sites.</li>
+         * </ul>
+         */
         GENERIC,
+
+        /**
+         * Sponsored Top-Level Domains (sTLDs).
+         *
+         * <p>sTLDs are associated with a specific community or interest group and are governed by policies set by a sponsor representing that community.
+         * Registration and use of these domains are subject to restrictions and eligibility requirements. Examples include:</p>
+         * <ul>
+         *   <li><b>.gov</b> - Restricted to U.S. government entities.</li>
+         *   <li><b>.edu</b> - Restricted to accredited post-secondary educational institutions.</li>
+         *   <li><b>.mil</b> - Restricted to U.S. military entities.</li>
+         *   <li><b>.aero</b> - Restricted to members of the air transport industry.</li>
+         * </ul>
+         */
         SPONSORED,
+
+        /**
+         * Country Code Top-Level Domains (ccTLDs).
+         *
+         * <p>ccTLDs are assigned to specific countries or territories and are identified by two-letter codes, typically corresponding to ISO 3166-1 alpha-2 codes.
+         * These domains are intended for use by individuals and entities within the respective countries or territories, though some ccTLDs may have more flexible registration policies.
+         * Examples include:</p>
+         * <ul>
+         *   <li><b>.us</b> - United States.</li>
+         *   <li><b>.uk</b> - United Kingdom.</li>
+         *   <li><b>.jp</b> - Japan.</li>
+         *   <li><b>.br</b> - Brazil.</li>
+         * </ul>
+         */
         COUNTRY_CODE,
+
+        /**
+         * Infrastructure Top-Level Domains.
+         *
+         * <p>Infrastructure TLDs are used for technical infrastructure purposes related to the functioning of the Internet. Currently, the only TLD in this category is:</p>
+         * <ul>
+         *   <li><b>.arpa</b> - Used for technical infrastructure purposes, such as reverse DNS lookups.</li>
+         * </ul>
+         */
         INFRASTRUCTURE,
+
+        /**
+         * Generic Restricted Top-Level Domains (grTLDs).
+         *
+         * <p>grTLDs are generic TLDs with specific registration restrictions. These restrictions are intended to ensure that the TLD is used for its intended purpose. Examples include:</p>
+         * <ul>
+         *   <li><b>.biz</b> - Restricted to business use.</li>
+         *   <li><b>.name</b> - Intended for personal use by individuals.</li>
+         *   <li><b>.pro</b> - Restricted to certified professionals and related entities.</li>
+         * </ul>
+         */
         GENERIC_RESTRICTED,
+
+        /**
+         * Test Top-Level Domains.
+         *
+         * <p>Test TLDs are used for testing purposes and are not intended for production use on the global Internet. These domains are typically used in controlled environments to test DNS-related technologies and configurations. Examples include:</p>
+         * <ul>
+         *   <li><b>.test</b> - Used for testing and development purposes.</li>
+         *   <li><b>.example</b> - Reserved for use in examples and documentation.</li>
+         *   <li><b>.invalid</b> - Reserved for use in invalid domain names.</li>
+         *   <li><b>.localhost</b> - Reserved for use in local testing environments.</li>
+         * </ul>
+         */
         TEST
     }
 

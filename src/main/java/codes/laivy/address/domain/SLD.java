@@ -35,6 +35,9 @@ import java.util.Objects;
  * @see CharSequence
  * @see Objects
  * @see String
+ *
+ * @author Daniel Meinicke (Laivy)
+ * @since 1.1
  */
 public final class SLD implements CharSequence {
 
