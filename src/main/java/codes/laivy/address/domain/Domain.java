@@ -35,6 +35,8 @@ public final class Domain implements Address {
 
     // Static initializers
 
+    private static final long serialVersionUID = -3053834275420857080L;
+
     /**
      * Validates whether a given string is a valid domain name.
      *

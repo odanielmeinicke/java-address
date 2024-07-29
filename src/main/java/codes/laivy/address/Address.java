@@ -3,6 +3,8 @@ package codes.laivy.address;
 import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Represents an address. The library already provides two types of addresses: {@link IPv4Address} and {@link IPv6Address}.
  * <p>
@@ -17,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * </ul>
  * </p>
  */
-public interface Address {
+public interface Address extends Serializable {
 
     // Static initializers
 

@@ -41,6 +41,8 @@ public final class Port extends Number implements Comparable<Port> {
 
     // Static initializers
 
+    private static final long serialVersionUID = 5369961115491642639L;
+
     public static boolean validate(@NotNull String string) {
         try {
             int port = Integer.parseInt(string);

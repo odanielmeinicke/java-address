@@ -25,6 +25,8 @@ public final class IPv6Address implements Address {
 
     // Static initializers
 
+    private static final long serialVersionUID = 3421693018286653906L;
+
     /**
      * Validates if a given string is a valid IPv6 address.
      * <p>

@@ -30,6 +30,8 @@ public final class IPv4Address implements Address {
 
     // Static initializers
 
+    private static final long serialVersionUID = 6642293391661876693L;
+
     /**
      * Validates if a given string is a valid IPv4 address.
      * <p>

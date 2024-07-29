@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -38,10 +39,11 @@ import java.util.*;
  * @since 1.1
  */
 @SuppressWarnings("NonAsciiCharacters")
-public final class TLD implements CharSequence {
+public final class TLD implements CharSequence, Serializable {
 
     // Static initializers
 
+    private static final long serialVersionUID = -5154560316815508774L;
     private static final @NotNull Map<String, TLD> map = new HashMap<>();
 
     static {

@@ -3,6 +3,7 @@ package codes.laivy.address.domain;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -39,9 +40,11 @@ import java.util.Objects;
  * @author Daniel Meinicke (Laivy)
  * @since 1.1
  */
-public final class SLD implements CharSequence {
+public final class SLD implements CharSequence, Serializable {
 
     // Static initializers
+
+    private static final long serialVersionUID = -2051262781005743506L;
 
     /**
      * Validates whether a given string is a valid SLD.

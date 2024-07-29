@@ -3,6 +3,7 @@ package codes.laivy.address.domain;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -39,9 +40,11 @@ import java.util.Objects;
  * @author Daniel Meinicke (Laivy)
  * @since 1.1
  */
-public final class Subdomain implements CharSequence {
+public final class Subdomain implements CharSequence, Serializable {
 
     // Static initializers
+
+    private static final long serialVersionUID = -6906441453108112713L;
 
     /**
      * The default implementation of the WWW common subdomain
