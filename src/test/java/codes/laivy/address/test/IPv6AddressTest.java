@@ -1,5 +1,7 @@
 package codes.laivy.address.test;
 
+import codes.laivy.address.exception.IllegalAddressTypeException;
+import codes.laivy.address.ip.IPv4Address;
 import codes.laivy.address.ip.IPv6Address;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
@@ -85,6 +87,21 @@ public class IPv6AddressTest {
             @NotNull IPv6Address clone = IPv6Address.parse(address.getRawName());
 
             Assertions.assertEquals(address, clone);
+        }
+    }
+    @Test
+    void ipv4() {
+        for (@NotNull String string : valids) {
+            @NotNull IPv6Address address = IPv6Address.parse(string);
+
+            if (address.isMapped()) try {
+                @NotNull IPv4Address ipv4 = address.toIPv4();
+                @NotNull IPv6Address clone = ipv4.toIPv6();
+
+                Assertions.assertEquals(address, clone);
+            } catch (@NotNull IllegalAddressTypeException e) {
+                throw new IllegalStateException("cannot parse mapped ipv6 to a ipv4 '" + string + "'", e);
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package codes.laivy.address.ip;
 
+import codes.laivy.address.exception.IllegalAddressTypeException;
 import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -215,7 +216,7 @@ public final class IPv6Address implements IPAddress {
      * @param groups an array of eight short integers representing the groups of the IPv6 address.
      * @throws IllegalArgumentException if the array does not have exactly eight elements.
      */
-    private IPv6Address(short[] groups) {
+    public IPv6Address(short[] groups) {
         this.groups = groups;
 
         if (groups.length != 8) {
@@ -512,6 +513,72 @@ public final class IPv6Address implements IPAddress {
             }
         }
         return result;
+    }
+
+    /**
+     * Determines whether the current IPv6 address is an IPv4-mapped IPv6 address.
+     * <p>
+     * An IPv4-mapped IPv6 address is an IPv6 address that embeds an IPv4 address.
+     * The structure of an IPv4-mapped IPv6 address is:
+     * <pre>
+     * 0000:0000:0000:0000:0000:ffff:xxxx:xxxx
+     * </pre>
+     * Where "xxxx:xxxx" represents the IPv4 address.
+     * <p>
+     * This method checks if the last two groups of the IPv6 addresses are non-zero and equal to 0xffff,
+     * which indicates that it is an IPv4-mapped address.
+     * All other groups must be zero.
+     *
+     * @return {@code true} if the address is an IPv4-mapped IPv6 address; {@code false} otherwise.
+     *
+     * @since 1.2
+     * @author Daniel Meinicke (Laivy)
+     */
+    public boolean isMapped() {
+        return (groups[0] == 0 && groups[1] == 0 && groups[2] == 0 && groups[3] == 0 && groups[4] == 0 && groups[5] == (short) 0xffff);
+    }
+
+    /**
+     * Converts the IPv4-mapped IPv6 address to an {@link IPv4Address}.
+     * <p>
+     * This method can only be called if {@link #isMapped()} returns {@code true}.
+     * It extracts the
+     * 32-bit IPv4 address from the last two groups of the IPv6 addresses
+     * and converts it to an {@link IPv4Address}.
+     * The conversion process involves extracting the high and low 16-bit segments of the address and combining
+     * them into four octets.
+     * <p>
+     * Example:
+     * <pre>
+     * IPv6 Address: 0:0:0:0:0:ffff:7f00:1
+     * IPv4 Address: 127.0.0.1
+     * </pre>
+     *
+     * @return An {@link IPv4Address} instance representing the IPv4 address embedded in this IPv6 address.
+     * @throws IllegalAddressTypeException if this IPv6 address is not an IPv4-mapped address.
+     *
+     * @since 1.2
+     * @author Daniel Meinicke (Laivy)
+     */
+    public @NotNull IPv4Address toIPv4() throws IllegalAddressTypeException {
+        if (!isMapped()) {
+            throw new IllegalAddressTypeException("This IPv6 address isn't an IPv4-mapped IPv6 address");
+        }
+
+        // Get high and low
+        int high = groups[7] & 0xFFFF;
+        int low = groups[6] & 0xFFFF;
+
+        // Generate octets
+        int[] octets = new int[] {
+                (low >> 8) & 0xFF,
+                low & 0xFF,
+                (high >> 8) & 0xFF,
+                high & 0xFF
+        };
+
+        // Finish
+        return new IPv4Address(octets);
     }
 
 }

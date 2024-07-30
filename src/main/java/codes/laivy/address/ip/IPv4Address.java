@@ -414,4 +414,49 @@ public final class IPv4Address implements IPAddress {
         return (octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3];
     }
 
+    /**
+     * Converts the current {@link IPv4Address} to an IPv6-mapped IPv6 address.
+     * <p>
+     * An IPv4-mapped IPv6 address is an IPv6 address that represents an IPv4 address.
+     * The structure of
+     * such an address is:
+     * <pre>
+     * 0000:0000:0000:0000:0000:ffff:xxxx:xxxx
+     * </pre>
+     * Where "xxxx:xxxx" represents the IPv4 address.
+     * <p>
+     * This method constructs an IPv6-mapped address by embedding the IPv4 address into the last two
+     * segments of an IPv6 address.
+     * The first six segments are set to 0, and the seventh segment is set to 0xffff,
+     * which indicates an IPv4-mapped address.
+     * <p>
+     * Example:
+     * <pre>
+     * IPv4 Address: 127.0.0.1
+     * IPv6-mapped IPv6 Address: 0000:0000:0000:0000:0000:ffff:7f00:0001
+     * </pre>
+     *
+     * @return An {@link IPv6Address} instance representing the IPv4-mapped IPv6 address.
+     *
+     * @since 1.2
+     * @author Daniel Meinicke (Laivy)
+     */
+    public @NotNull IPv6Address toIPv6() {
+        short[] groups = new short[8];
+
+        // Put zeros
+        for (int i = 0; i < 5; i++) {
+            groups[i] = 0;
+        }
+
+        // Generate group decimal
+        groups[5] = (short) 0xffff;
+        groups[6] = (short) ((getOctets()[0] << 8) | getOctets()[1]);
+        groups[7] = (short) ((getOctets()[2] << 8) | getOctets()[3]);
+
+        // Finish
+        return new IPv6Address(groups);
+    }
+
+
 }

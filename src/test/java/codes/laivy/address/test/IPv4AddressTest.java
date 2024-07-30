@@ -1,6 +1,7 @@
 package codes.laivy.address.test;
 
 import codes.laivy.address.ip.IPv4Address;
+import codes.laivy.address.ip.IPv6Address;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 
@@ -74,6 +75,18 @@ public class IPv4AddressTest {
             @NotNull IPv4Address clone = IPv4Address.fromInteger(address.toInteger());
 
             Assertions.assertEquals(address, clone);
+        }
+    }
+    @Test
+    void ipv6() {
+        for (@NotNull String string : valids) try {
+            @NotNull IPv4Address address = IPv4Address.parse(string);
+            @NotNull IPv6Address ipv6 = address.toIPv6();
+            @NotNull IPv4Address clone = ipv6.toIPv4();
+
+            Assertions.assertEquals(address, clone);
+        } catch (@NotNull Throwable e) {
+            throw new IllegalStateException("cannot create ipv4-mapped address using '" + string + "'", e);
         }
     }
 
