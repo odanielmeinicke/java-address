@@ -161,6 +161,36 @@ public class Host implements Serializable, Cloneable {
         return new Host(address, port);
     }
 
+    /**
+     * Creates a new {@code ConcreteHost} instance with the specified address and optional port.
+     * This static factory method provides a convenient way to instantiate a {@code ConcreteHost} object
+     * by specifying the address and port. It ensures that the created {@code ConcreteHost} has a specific type
+     * of address as defined by the generic parameter {@code T}.
+     *
+     * <p>The method takes an {@link Address} of type {@code T} and an optional {@link Port}. If the port is
+     * {@code null}, the resulting {@code ConcreteHost} will not have a specific port assigned.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * IPAddress ipAddress = new IPAddress("192.168.1.1");
+     * Port port = new Port(8080);
+     * ConcreteHost<IPAddress> concreteHost = Host.concrete(ipAddress, port);
+     *
+     * IPAddress address = concreteHost.getAddress(); // Safely cast to IPAddress
+     * Port hostPort = concreteHost.getPort(); // Retrieves the associated port
+     * }</pre>
+     *
+     * @param <T> the specific type of {@link Address} associated with the {@code ConcreteHost}, which must extend
+     *            {@link Address}
+     * @param address the address to associate with the {@code ConcreteHost}, which cannot be {@code null}
+     * @param port the port to associate with the {@code ConcreteHost}, which can be {@code null} if no specific
+     *             port is required
+     * @return a new {@code ConcreteHost} instance with the specified address and port
+     */
+    public static <T extends Address> @NotNull ConcreteHost<T> concrete(@NotNull T address, @Nullable Port port) {
+        return new ConcreteHost<T>(address, port);
+    }
+
     // Object
 
     private final @NotNull Address address;
@@ -259,7 +289,7 @@ public class Host implements Serializable, Cloneable {
      * @return a new {@link Host} instance with the specified port
      */
     public @NotNull Host clone(@Nullable Port newPort) {
-        return new Host(getAddress(), newPort);
+        return new Host(getAddress().clone(), newPort);
     }
 
     /**
@@ -276,4 +306,5 @@ public class Host implements Serializable, Cloneable {
             throw new RuntimeException("Cannot clone host", e);
         }
     }
+
 }
