@@ -65,6 +65,13 @@ public final class IPv6Address implements IPAddress {
             }
         }
 
+        // Verify if it is a ipv4-mapped ipv6
+        if (string.startsWith("::ffff:")) {
+            if (IPv4Address.validate(string.substring(7))) {
+                return true;
+            }
+        }
+
         // Consider only the address part for further validation
         string = parts[0];
 
@@ -74,7 +81,14 @@ public final class IPv6Address implements IPAddress {
         for (int row = 0; row < missing; row++) {
             zeros.append("0:");
         }
+
+        if (string.split("(?<=\\w):(?=\\w)").length >= 7 && string.contains("::")) {
+            return false;
+        }
+
         string = string.replace("::", ":" + zeros);
+        if (string.startsWith(":")) string = "0" + string;
+        if (string.endsWith(":")) string += "0";
 
         // Step 5: Split the normalized address on colons to separate the hexadecimal groups
         parts = string.split(":");
@@ -85,6 +99,10 @@ public final class IPv6Address implements IPAddress {
         } else {
             // Step 7: Validate each hexadecimal group
             for (@NotNull String hex : parts) {
+                if (hex.length() > 4) {
+                    return false;
+                }
+
                 try {
                     Integer.parseInt(hex, 16);
                 } catch (@NotNull NumberFormatException ignore) {
@@ -127,6 +145,24 @@ public final class IPv6Address implements IPAddress {
             @NotNull String[] parts = string.split("]");
             string = parts[0];
 
+            // Verify if it is a ipv4-mapped ipv6
+            if (string.startsWith("::ffff:")) {
+                @NotNull String ipv4 = string.substring(7);
+
+                if (IPv4Address.validate(ipv4)) {
+                    @NotNull StringBuilder converter = new StringBuilder();
+
+                    for (@NotNull String part : ipv4.split("\\.")) {
+                        if (converter.length() > 0) {
+                            converter.append(":");
+                        }
+                        converter.append(String.format("%02x", Integer.parseInt(part)));
+                    }
+
+                    string = "::ffff:" + converter;
+                }
+            }
+
             // Step 4: Parse the groups
             short[] groups = new short[8];
 
@@ -141,7 +177,9 @@ public final class IPv6Address implements IPAddress {
             // Step 6: Split the normalized address on colons to separate the hexadecimal groups
             @NotNull String[] groupParts = string.split(":");
             for (int index = 0; index < groupParts.length; index++) {
-                @NotNull String hex = groupParts[index].replaceFirst("^0+(?!$)", "");
+                @NotNull String hex = groupParts[index];
+                if (hex.isEmpty()) hex = "0";
+
                 groups[index] = (short) Integer.parseInt(hex, 16);
             }
 
@@ -239,16 +277,14 @@ public final class IPv6Address implements IPAddress {
         // Build the string representation
         @NotNull StringBuilder builder = new StringBuilder();
 
-        for (int index = 0; index < 8; index++) {
+        for (int index = 0; index < 8; index++) { // Loop over the eight groups
             short group = getGroups()[index];
 
             // Generate the representation
             @NotNull String representation = function.apply(group);
-            if (representation.equals("0000")) representation = "0";
 
-            // Check for zero abbreviation
-            if (group == 0 && index != 7 && getGroups()[index + 1] == 0) {
-                continue;
+            if (representation.isEmpty()) {
+                representation = "0";
             }
 
             // Add the ":" separator
@@ -257,7 +293,7 @@ public final class IPv6Address implements IPAddress {
             builder.append(representation);
         }
 
-        return builder.toString();
+        return builder.toString().toLowerCase().replaceAll(":{3,}", "::");
     }
 
     /**
@@ -275,7 +311,7 @@ public final class IPv6Address implements IPAddress {
 
         for (int i = 0; i < 8; i++) {
             // Format each group as four hexadecimal digits, with leading zeros
-            @NotNull String group = String.format("%04X", groups[i]);
+            @NotNull String group = String.format("%04X", getGroups()[i]);
 
             if (i > 0) {
                 builder.append(":");
