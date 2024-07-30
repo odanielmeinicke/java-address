@@ -287,14 +287,17 @@ public final class Domain implements Address, HttpAddress {
     }
 
     /**
-     * Returns a string representation of this domain, including the specified port number.
+     * Returns a clone of this domain address with the same TLD, SLD and subdomains.
      *
-     * @param port the port number to include in the string representation
-     * @return a string representation of this domain with the port number
+     * @return the clone of this domain
      */
     @Override
-    public @NotNull Address clone() {
-        return null;
+    public @NotNull Domain clone() {
+        try {
+            return (Domain) super.clone();
+        } catch (@NotNull CloneNotSupportedException e) {
+            throw new RuntimeException("cannot clone domain", e);
+        }
     }
 
 }

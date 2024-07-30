@@ -70,6 +70,11 @@ public final class IPv4Address implements IPAddress {
             string = parts[0];
         }
 
+        // Prevent string ending with "."
+        if (string.endsWith(".")) {
+            return false;
+        }
+
         // Step 5: Split the address part on the dot to separate the octets
         @NotNull String[] parts = string.split("\\.");
 
@@ -80,6 +85,12 @@ public final class IPv4Address implements IPAddress {
             // Step 7: Validate each octet
             for (@NotNull String part : parts) {
                 try {
+                    // Avoid leading zeros
+                    if (part.length() > 1 && part.charAt(0) == '0') {
+                        return false;
+                    }
+
+                    // Parse
                     int octet = Integer.parseInt(part);
                     if (octet < 0 || octet > 255) return false;
                 } catch (@NotNull NumberFormatException ignore) {
@@ -114,6 +125,11 @@ public final class IPv4Address implements IPAddress {
             // Step 2: Split the string on the colon to separate the address from the port
             @NotNull String[] parts = string.split(":");
             @NotNull String name = parts[0];
+
+            // Prevent string ending with "."
+            if (string.endsWith(".")) {
+                throw new IllegalArgumentException("ipv4 addresses cannot end with '.'");
+            }
 
             // Step 3: Split the address part on the dot to separate the octets
             parts = name.split("\\.");
@@ -376,6 +392,20 @@ public final class IPv4Address implements IPAddress {
     @Override
     public @NotNull String toString(@NotNull Port port) {
         return getName() + ":" + port;
+    }
+
+    /**
+     * Returns a clone of this ipv4 address with the same bytes.
+     *
+     * @return the clone of this ipv4 address
+     */
+    @Override
+    public @NotNull IPv4Address clone() {
+        try {
+            return (IPv4Address) super.clone();
+        } catch (@NotNull CloneNotSupportedException e) {
+            throw new RuntimeException("cannot clone ipv4 address", e);
+        }
     }
 
     /**

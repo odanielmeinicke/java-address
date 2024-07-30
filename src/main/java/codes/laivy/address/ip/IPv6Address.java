@@ -376,6 +376,20 @@ public final class IPv6Address implements IPAddress {
     }
 
     /**
+     * Returns a clone of this ipv6 address with the same bytes.
+     *
+     * @return the clone of this ipv6 address
+     */
+    @Override
+    public @NotNull IPv6Address clone() {
+        try {
+            return (IPv6Address) super.clone();
+        } catch (@NotNull CloneNotSupportedException e) {
+            throw new RuntimeException("cannot clone ipv6 address", e);
+        }
+    }
+
+    /**
      * Converts the IPv6 address to a full URL string, including the protocol (HTTP/HTTPS),
      * the address enclosed in square brackets (as required for IPv6), and the port if specified.
      *
