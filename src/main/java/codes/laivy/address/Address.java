@@ -1,6 +1,7 @@
 package codes.laivy.address;
 
 import codes.laivy.address.domain.Domain;
+import codes.laivy.address.domain.TLD;
 import codes.laivy.address.ip.IPv4Address;
 import codes.laivy.address.ip.IPv6Address;
 import codes.laivy.address.port.Port;
@@ -14,17 +15,20 @@ import java.io.Serializable;
  * This interface defines methods to get the raw byte values of the address, get the name representation of the address,
  * and convert the address to a string with a specified port.
  * </p>
- * <p>
  * Example implementations:
  * <ul>
  *     <li>{@link IPv4Address} - Represents an IPv4 address, e.g., "192.168.0.1".</li>
  *     <li>{@link IPv6Address} - Represents an IPv6 address, e.g., "2001:0db8:85a3:0000:0000:8a2e:0370:7334".</li>
  * </ul>
- * </p>
  */
 public interface Address extends Serializable, Cloneable {
 
     // Static initializers
+
+    static void main(@NotNull String @NotNull [] args) {
+        // Loads the TLD class and fields
+        TLD.parse("com");
+    }
 
     /**
      * Validates if a given string is either a valid IPv4, IPv6 or Domain address.

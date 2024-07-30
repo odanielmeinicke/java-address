@@ -50,6 +50,7 @@ public interface HttpAddress extends Address {
      * the address, and the port if specified.
      *
      * @param secure {@code true} if the URL should use HTTPS, {@code false} for HTTP
+     * @param port the port of the URL (may be null)
      * @return the full URL as a {@link String}
      */
     default @NotNull String toString(boolean secure, @Nullable Port port) {

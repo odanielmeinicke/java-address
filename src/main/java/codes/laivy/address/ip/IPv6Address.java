@@ -11,12 +11,8 @@ import java.util.function.Function;
 
 /**
  * Represents an IPv6 address.
- * <p>
  * IPv6 (Internet Protocol version 6) is the most recent version of the Internet Protocol (IP), the communications protocol that provides an identification and location system for computers on networks and routes traffic across the Internet. IPv6 was developed to deal with the long-anticipated problem of IPv4 address exhaustion. IPv6 addresses are 128 bits long, compared to 32 bits in IPv4, which allows for a vastly larger number of unique IP addresses.
- * </p>
- * <p>
  * An IPv6 address is typically represented as eight groups of four hexadecimal digits, each group representing 16 bits of the address. The groups are separated by colons (e.g., "2001:0db8:85a3:0000:0000:8a2e:0370:7334"). Leading zeros in each group can be omitted, and consecutive groups of zero values can be replaced with a double colon (::). However, this substitution can only be used once in an address to avoid ambiguity.
- * </p>
  *
  * @author Daniel Meinicke (Laivy)
  * @since 1.0
@@ -29,7 +25,6 @@ public final class IPv6Address implements IPAddress {
 
     /**
      * Validates if a given string is a valid IPv6 address.
-     * <p>
      * The validation process consists of the following steps:
      * <ol>
      *   <li>If the string starts with a square bracket '[', it removes the bracket.</li>
@@ -41,7 +36,6 @@ public final class IPv6Address implements IPAddress {
      *   <li>Verifies that there are exactly eight hexadecimal groups.</li>
      *   <li>Parses each hexadecimal group to an integer to ensure they are valid hexadecimal numbers.</li>
      * </ol>
-     * </p>
      *
      * @param string the string to validate.
      * @return {@code true} if the string is a valid IPv6 address; {@code false} otherwise.
@@ -116,7 +110,6 @@ public final class IPv6Address implements IPAddress {
 
     /**
      * Parses a given string into an {@link IPv6Address} instance.
-     * <p>
      * The parsing process involves the following steps:
      * <ol>
      *   <li>Validates the input string using the {@link #validate(String)} method.</li>
@@ -127,7 +120,6 @@ public final class IPv6Address implements IPAddress {
      *   <li>Parses each hexadecimal group from a string to a short integer.</li>
      *   <li>Creates a new {@link IPv6Address} instance with the parsed groups.</li>
      * </ol>
-     * </p>
      *
      * @param string the string to parse.
      * @return the parsed {@link IPv6Address} instance.

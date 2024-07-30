@@ -13,15 +13,13 @@ import java.util.Objects;
  * IPv4 addresses are typically represented in dot-decimal notation, which consists of four decimal numbers, each ranging from 0 to 255, separated by dots (e.g., "192.168.0.1").
  * <p>
  * This class provides methods to validate, parse, and retrieve information about an IPv4 address.
- * <p>
- * The dot-decimal notation corresponds to four octets (8 bits each), making up a 32-bit address. For instance, the address "192.168.0.1" consists of the following octets:
+ * The dot-decimal notation corresponds to four octets (eight bits each), making up a 32-bit address. For instance, the address "192.168.0.1" consists of the following octets:
  * <ul>
  *   <li>192</li>
  *   <li>168</li>
  *   <li>0</li>
  *   <li>1</li>
  * </ul>
- * </p>
  *
  * @author Daniel Meinicke (Laivy)
  * @since 1.0
@@ -34,7 +32,6 @@ public final class IPv4Address implements IPAddress {
 
     /**
      * Validates if a given string is a valid IPv4 address.
-     * <p>
      * The validation process consists of the following steps:
      * <ol>
      *   <li>Checks if the string length exceeds 21 characters (maximum length including optional port and separators).</li>
@@ -45,7 +42,6 @@ public final class IPv4Address implements IPAddress {
      *   <li>Checks if there are exactly four octets.</li>
      *   <li>Parses each octet to an integer and verifies that it is within the range 0-255.</li>
      * </ol>
-     * </p>
      *
      * @param string the string to validate.
      * @return {@code true} if the string is a valid IPv4 address; {@code false} otherwise.
@@ -104,7 +100,6 @@ public final class IPv4Address implements IPAddress {
 
     /**
      * Parses a given string into an {@link IPv4Address} instance.
-     * <p>
      * The parsing process involves the following steps:
      * <ol>
      *   <li>Validates the input string using the {@link #validate(String)} method.</li>
@@ -113,7 +108,6 @@ public final class IPv4Address implements IPAddress {
      *   <li>Converts each octet from a string to an integer.</li>
      *   <li>Creates a new {@link IPv4Address} instance with the parsed octets.</li>
      * </ol>
-     * </p>
      *
      * @param string the string to parse.
      * @return the parsed {@link IPv4Address} instance.

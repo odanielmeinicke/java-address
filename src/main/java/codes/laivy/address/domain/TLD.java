@@ -100,7 +100,7 @@ public final class TLD implements CharSequence, Serializable {
 //    public static void main(@NotNull String @NotNull ... args) throws IOException, InterruptedException {
 //        // Create file and writer
 //        @NotNull File file = new File("./tlds.log");
-//        if (!file.exists() && !file.createNewFile()) {
+//        if (!file.exists() and !file.createNewFile()) {
 //            throw new IllegalStateException("cannot create TLDs file");
 //        }
 //
@@ -165,7 +165,7 @@ public final class TLD implements CharSequence, Serializable {
 //
 //            if (details.getElementsByTag("h2").stream().anyMatch(h2 -> h2.text().equals("IANA Reports"))) {
 //                for (@NotNull Element ul : details.getElementsByTag("ul")) {
-//                    if (ul.getElementsByTag("li").stream().allMatch(li -> li.getAllElements().size() == 2 && li.getElementsByTag("a").size() == 1 && li.getElementsByTag("a").get(0).attr("href").startsWith("/reports/"))) {
+//                    if (ul.getElementsByTag("li").stream().allMatch(li -> li.getAllElements().size() == 2 and li.getElementsByTag("a").size() == 1 and li.getElementsByTag("a").get(0).attr("href").startsWith("/reports/"))) {
 //                        for (@NotNull Element li : ul.getElementsByTag("li")) {
 //                            a = Objects.requireNonNull(li.getElementsByTag("a").first());
 //
@@ -458,11 +458,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20150825-aco">Delegation of the .aco domain to ACO Severin Ahlmann GmbH & Co. KG (2015-08-25)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20150825-aco">Delegation of the .aco domain to ACO Severin Ahlmann GmbH and Co. KG (2015-08-25)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD ACO = new TLD("aco", Type.GENERIC, "ACO Severin Ahlmann GmbH & Co. KG", LocalDate.parse("2015-07-16"), LocalDate.parse("2022-06-22"));
+    public static final @NotNull TLD ACO = new TLD("aco", Type.GENERIC, "ACO Severin Ahlmann GmbH and Co. KG", LocalDate.parse("2015-07-16"), LocalDate.parse("2022-06-22"));
 
     /**
      * <h2>IANA Reports</h2>
@@ -1501,7 +1501,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160406-baby">Delegation of the .baby domain to Johnson & Johnson Services, Inc. (2016-04-06)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160406-baby">Delegation of the .baby domain to Johnson and Johnson Services, Inc. (2016-04-06)</a></li>
      *   <li><a href="https://iana.org/reports/tld-transfer/20190324-baby">Transfer of the .baby domain to XYZ.COM LLC (2019-03-24)</a></li>
      * </ul>
      *
@@ -1736,7 +1736,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160713-bbt">Delegation of the .bbt domain to BB&T Corporation (2016-07-13)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160713-bbt">Delegation of the .bbt domain to BBT Corporation (2016-07-13)</a></li>
      * </ul>
      *
      */
@@ -1856,11 +1856,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140103-berlin">Delegation of the .BERLIN domain to dotBERLIN GmbH & Co. KG (2014-01-03)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140103-berlin">Delegation of the .BERLIN domain to dotBERLIN GmbH and Co. KG (2014-01-03)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD BERLIN = new TLD("berlin", Type.GENERIC, "dotBERLIN GmbH & Co. KG", LocalDate.parse("2013-12-19"), LocalDate.parse("2022-05-18"));
+    public static final @NotNull TLD BERLIN = new TLD("berlin", Type.GENERIC, "dotBERLIN GmbH and Co. KG", LocalDate.parse("2013-12-19"), LocalDate.parse("2022-05-18"));
 
     /**
      * <h2>Registry Information</h2>
@@ -3267,7 +3267,7 @@ public final class TLD implements CharSequence, Serializable {
      * <b>URL for registration services:</b> <a href="https://www.nic.ch/">https://www.nic.ch/</a><br><b>WHOIS Server:</b> whois.nic.ch<br>
      *
      */
-    public static final @NotNull TLD CH = new TLD("ch", Type.COUNTRY_CODE, "SWITCH The Swiss Education & Research Network", LocalDate.parse("1987-05-20"), LocalDate.parse("2023-11-30"));
+    public static final @NotNull TLD CH = new TLD("ch", Type.COUNTRY_CODE, "SWITCH The Swiss Education and Research Network", LocalDate.parse("1987-05-20"), LocalDate.parse("2023-11-30"));
 
     /**
      * <h2>Registry Information</h2>
@@ -3317,7 +3317,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160225-chase">Delegation of the .chase domain to JPMorgan Chase & Co. (2016-02-25)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160225-chase">Delegation of the .chase domain to JPMorgan Chase and Co. (2016-02-25)</a></li>
      *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160718-chase">Redelegation of the .chase domain to JPMorgan Chase Bank, National Association (2016-07-18)</a></li>
      * </ul>
      *
@@ -4981,17 +4981,17 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160606-dunlop">Delegation of the .dunlop domain to The Goodyear Tire & Rubber Company (2016-06-06)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160606-dunlop">Delegation of the .dunlop domain to The Goodyear Tire and Rubber Company (2016-06-06)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD DUNLOP = new TLD("dunlop", Type.GENERIC, "The Goodyear Tire & Rubber Company", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-08-11"));
+    public static final @NotNull TLD DUNLOP = new TLD("dunlop", Type.GENERIC, "The Goodyear Tire and Rubber Company", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-08-11"));
 
     /**
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160721-duns">Delegation of the .duns domain to The Dun & Bradstreet Corporation (2016-07-21)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160721-duns">Delegation of the .duns domain to The Dun and Bradstreet Corporation (2016-07-21)</a></li>
      *   <li><a href="https://iana.org/reports/tld-transfer/20190830-duns">Revocation of the .duns domain (2019-08-30)</a></li>
      * </ul>
      *
@@ -6822,7 +6822,7 @@ public final class TLD implements CharSequence, Serializable {
      * <b>URL for registration services:</b> <a href="https://cp.nic.gmx">https://cp.nic.gmx</a><br><b>WHOIS Server:</b> whois.nic.gmx<br>
      *
      */
-    public static final @NotNull TLD GMX = new TLD("gmx", Type.GENERIC, "1&1 Mail & Media GmbH", LocalDate.parse("2014-08-07"), LocalDate.parse("2022-09-02"));
+    public static final @NotNull TLD GMX = new TLD("gmx", Type.GENERIC, "1&1 Mail and Media GmbH", LocalDate.parse("2014-08-07"), LocalDate.parse("2022-09-02"));
 
     /**
      * <h2>Registry Information</h2>
@@ -6916,11 +6916,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160606-goodyear">Delegation of the .goodyear domain to The Goodyear Tire & Rubber Company (2016-06-06)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160606-goodyear">Delegation of the .goodyear domain to The Goodyear Tire and Rubber Company (2016-06-06)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD GOODYEAR = new TLD("goodyear", Type.GENERIC, "The Goodyear Tire & Rubber Company", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-08-11"));
+    public static final @NotNull TLD GOODYEAR = new TLD("goodyear", Type.GENERIC, "The Goodyear Tire and Rubber Company", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-08-11"));
 
     /**
      * <h2>Registry Information</h2>
@@ -8546,11 +8546,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160406-jnj">Delegation of the .jnj domain to Johnson & Johnson Services, Inc. (2016-04-06)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160406-jnj">Delegation of the .jnj domain to Johnson and Johnson Services, Inc. (2016-04-06)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD JNJ = new TLD("jnj", Type.GENERIC, "Johnson & Johnson Services, Inc.", LocalDate.parse("2016-01-14"), LocalDate.parse("2024-07-01"));
+    public static final @NotNull TLD JNJ = new TLD("jnj", Type.GENERIC, "Johnson and Johnson Services, Inc.", LocalDate.parse("2016-01-14"), LocalDate.parse("2024-07-01"));
 
     /**
      * <h2>Registry Information</h2>
@@ -8633,7 +8633,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160225-jpmorgan">Delegation of the .jpmorgan domain to JPMorgan Chase & Co. (2016-02-25)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160225-jpmorgan">Delegation of the .jpmorgan domain to JPMorgan Chase and Co. (2016-02-25)</a></li>
      *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160718-jpmorgan">Redelegation of the .jpmorgan domain to JPMorgan Chase Bank, National Association (2016-07-18)</a></li>
      * </ul>
      *
@@ -8902,7 +8902,7 @@ public final class TLD implements CharSequence, Serializable {
      * </ul>
      *
      */
-    public static final @NotNull TLD KN = new TLD("kn", Type.COUNTRY_CODE, "Ministry of Finance, Sustainable Development Information & Technology", LocalDate.parse("1991-09-03"), LocalDate.parse("2022-11-21"));
+    public static final @NotNull TLD KN = new TLD("kn", Type.COUNTRY_CODE, "Ministry of Finance, Sustainable Development Information and Technology", LocalDate.parse("1991-09-03"), LocalDate.parse("2022-11-21"));
 
     /**
      * <h2>Registry Information</h2>
@@ -8987,7 +8987,7 @@ public final class TLD implements CharSequence, Serializable {
      * <b>URL for registration services:</b> <a href="http://www.nic.or.kr/">http://www.nic.or.kr/</a><br><b>WHOIS Server:</b> whois.kr<br>
      *
      */
-    public static final @NotNull TLD KR = new TLD("kr", Type.COUNTRY_CODE, "Korea Internet & Security Agency (KISA)", LocalDate.parse("1986-09-29"), LocalDate.parse("2020-07-16"));
+    public static final @NotNull TLD KR = new TLD("kr", Type.COUNTRY_CODE, "Korea Internet and Security Agency (KISA)", LocalDate.parse("1986-09-29"), LocalDate.parse("2020-07-16"));
 
     /**
      * <h2>Registry Information</h2>
@@ -9423,7 +9423,7 @@ public final class TLD implements CharSequence, Serializable {
      * <b>URL for registration services:</b> <a href="https://www.nic.li">https://www.nic.li</a><br><b>WHOIS Server:</b> whois.nic.li<br>
      *
      */
-    public static final @NotNull TLD LI = new TLD("li", Type.COUNTRY_CODE, "SWITCH The Swiss Education & Research Network", LocalDate.parse("1993-02-26"), LocalDate.parse("2023-11-29"));
+    public static final @NotNull TLD LI = new TLD("li", Type.COUNTRY_CODE, "SWITCH The Swiss Education and Research Network", LocalDate.parse("1993-02-26"), LocalDate.parse("2023-11-29"));
 
     /**
      * <h2>IANA Reports</h2>
@@ -9443,11 +9443,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141211-lidl">Delegation of the .lidl domain to Schwarz Domains und Services GmbH & Co. KG (2014-12-11)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141211-lidl">Delegation of the .lidl domain to Schwarz Domains und Services GmbH and Co. KG (2014-12-11)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD LIDL = new TLD("lidl", Type.GENERIC, "Schwarz Domains und Services GmbH & Co. KG", LocalDate.parse("2014-12-04"), LocalDate.parse("2023-11-06"));
+    public static final @NotNull TLD LIDL = new TLD("lidl", Type.GENERIC, "Schwarz Domains und Services GmbH and Co. KG", LocalDate.parse("2014-12-04"), LocalDate.parse("2023-11-06"));
 
     /**
      * <h2>Registry Information</h2>
@@ -11626,11 +11626,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140314-nyc">Delegation of the .nyc domain to The City of New York by and through the New York City Department of Information Technology & Telecommunications (2014-03-14)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140314-nyc">Delegation of the .nyc domain to The City of New York by and through the New York City Department of Information Technology and Telecommunications (2014-03-14)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD NYC = new TLD("nyc", Type.GENERIC, "The City of New York by and through the New York City Department of Information Technology & Telecommunications", LocalDate.parse("2014-03-13"), LocalDate.parse("2024-04-17"));
+    public static final @NotNull TLD NYC = new TLD("nyc", Type.GENERIC, "The City of New York by and through the New York City Department of Information Technology and Telecommunications", LocalDate.parse("2014-03-13"), LocalDate.parse("2024-04-17"));
 
     /**
      * <h2>Registry Information</h2>
@@ -11646,11 +11646,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20150921-obi">Delegation of the .obi domain to OBI Group Holding SE & Co. KGaA (2015-09-21)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20150921-obi">Delegation of the .obi domain to OBI Group Holding SE and Co. KGaA (2015-09-21)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD OBI = new TLD("obi", Type.GENERIC, "OBI Group Holding SE & Co. KGaA", LocalDate.parse("2015-09-03"), LocalDate.parse("2023-08-11"));
+    public static final @NotNull TLD OBI = new TLD("obi", Type.GENERIC, "OBI Group Holding SE and Co. KGaA", LocalDate.parse("2015-09-03"), LocalDate.parse("2023-08-11"));
 
     /**
      * <h2>Registry Information</h2>
@@ -12849,7 +12849,7 @@ public final class TLD implements CharSequence, Serializable {
      * </ul>
      *
      */
-    public static final @NotNull TLD PS = new TLD("ps", Type.COUNTRY_CODE, "Ministry Of Telecommunications & Information Technology, Government Computer Center.", LocalDate.parse("2000-03-22"), LocalDate.parse("2021-02-04"));
+    public static final @NotNull TLD PS = new TLD("ps", Type.COUNTRY_CODE, "Ministry Of Telecommunications and Information Technology, Government Computer Center.", LocalDate.parse("2000-03-22"), LocalDate.parse("2021-02-04"));
 
     /**
      * <h2>Registry Information</h2>
@@ -13554,7 +13554,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20131206-ruhr">Delegation of the .RUHR domain to regiodot GmbH & Co. KG (2013-12-06)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20131206-ruhr">Delegation of the .RUHR domain to regiodot GmbH and Co. KG (2013-12-06)</a></li>
      *   <li><a href="https://iana.org/reports/tld-transfer/20220831-ruhr">Transfer of the .ruhr domain to dotSaarland GmbH (2022-08-31)</a></li>
      * </ul>
      *
@@ -13916,11 +13916,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20151222-schaeffler">Delegation of the .schaeffler domain to Schaeffler Technologies AG & Co. KG (2015-12-22)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20151222-schaeffler">Delegation of the .schaeffler domain to Schaeffler Technologies AG and Co. KG (2015-12-22)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD SCHAEFFLER = new TLD("schaeffler", Type.GENERIC, "Schaeffler Technologies AG & Co. KG", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-05-04"));
+    public static final @NotNull TLD SCHAEFFLER = new TLD("schaeffler", Type.GENERIC, "Schaeffler Technologies AG and Co. KG", LocalDate.parse("2015-12-17"), LocalDate.parse("2023-05-04"));
 
     /**
      * <h2>Registry Information</h2>
@@ -13983,11 +13983,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141210-schwarz">Delegation of the .schwarz domain to Schwarz Domains und Services GmbH & Co. KG (2014-12-10)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141210-schwarz">Delegation of the .schwarz domain to Schwarz Domains und Services GmbH and Co. KG (2014-12-10)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD SCHWARZ = new TLD("schwarz", Type.GENERIC, "Schwarz Domains und Services GmbH & Co. KG", LocalDate.parse("2014-12-04"), LocalDate.parse("2023-11-06"));
+    public static final @NotNull TLD SCHWARZ = new TLD("schwarz", Type.GENERIC, "Schwarz Domains und Services GmbH and Co. KG", LocalDate.parse("2014-12-04"), LocalDate.parse("2023-11-06"));
 
     /**
      * <h2>Registry Information</h2>
@@ -14190,11 +14190,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141210-sew">Delegation of the .sew domain to SEW-EURODRIVE GmbH & Co. KG (2014-12-10)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20141210-sew">Delegation of the .sew domain to SEW-EURODRIVE GmbH and Co. KG (2014-12-10)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD SEW = new TLD("sew", Type.GENERIC, "SEW-EURODRIVE GmbH & Co KG", LocalDate.parse("2014-11-06"), LocalDate.parse("2023-08-15"));
+    public static final @NotNull TLD SEW = new TLD("sew", Type.GENERIC, "SEW-EURODRIVE GmbH and Co KG", LocalDate.parse("2014-11-06"), LocalDate.parse("2023-08-15"));
 
     /**
      * <h2>Registry Information</h2>
@@ -14797,7 +14797,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140716-spiegel">Delegation of the .spiegel domain to SPIEGEL-Verlag Rudolf Augstein GmbH & Co. KG (2014-07-16)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140716-spiegel">Delegation of the .spiegel domain to SPIEGEL-Verlag Rudolf Augstein GmbH and Co. KG (2014-07-16)</a></li>
      *   <li><a href="https://iana.org/reports/tld-transfer/20181214-spiegel">Revocation of the .spiegel domain (2018-12-14)</a></li>
      * </ul>
      *
@@ -15627,7 +15627,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/2016/tg-report-20160118.html">Redelegation of the .TG domain representing Togo to the Autorite de Reglementation des Secteurs de Postes et de Telecommunications (ART&P) (2016-01-18)</a></li>
+     *   <li><a href="https://iana.org/reports/2016/tg-report-20160118.html">Redelegation of the .TG domain representing Togo to the Autorite de Reglementation des Secteurs de Postes et de Telecommunications (ARTP) (2016-01-18)</a></li>
      * </ul>
      *
      */
@@ -15934,7 +15934,7 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140801-top">Delegation of the .top domain to Jiangsu Bangning Science & Technology Co.,Ltd. (2014-08-01)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20140801-top">Delegation of the .top domain to Jiangsu Bangning Science and Technology Co.,Ltd. (2014-08-01)</a></li>
      * </ul>
      *
      */
@@ -16251,11 +16251,11 @@ public final class TLD implements CharSequence, Serializable {
      * <h2>IANA Reports</h2>
      *
      * <ul>
-     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160209-tvs">Delegation of the .tvs domain to T V Sundram Iyengar & Sons Private Limited (2016-02-09)</a></li>
+     *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160209-tvs">Delegation of the .tvs domain to T V Sundram Iyengar and Sons Private Limited (2016-02-09)</a></li>
      * </ul>
      *
      */
-    public static final @NotNull TLD TVS = new TLD("tvs", Type.GENERIC, "T V SUNDRAM IYENGAR & SONS PRIVATE LIMITED", LocalDate.parse("2016-02-05"), LocalDate.parse("2020-10-30"));
+    public static final @NotNull TLD TVS = new TLD("tvs", Type.GENERIC, "T V SUNDRAM IYENGAR and SONS PRIVATE LIMITED", LocalDate.parse("2016-02-05"), LocalDate.parse("2020-10-30"));
 
     /**
      * <h2>Registry Information</h2>
@@ -16934,7 +16934,6 @@ public final class TLD implements CharSequence, Serializable {
      * <ul>
      *   <li><a href="https://iana.org/reports/c.2.9.2.d/20160816-walmart">Delegation of the .walmart domain to Wal-Mart Stores, Inc. (2016-08-16)</a></li>
      * </ul>
-     *
      */
     public static final @NotNull TLD WALMART = new TLD("walmart", Type.GENERIC, "Wal-Mart Stores, Inc.", LocalDate.parse("2016-07-21"), LocalDate.parse("2023-09-14"));
 
@@ -17346,7 +17345,7 @@ public final class TLD implements CharSequence, Serializable {
      * <b>URL for registration services:</b> <a href="http://www.website.ws">http://www.website.ws</a><br><b>WHOIS Server:</b> whois.website.ws<br>
      *
      */
-    public static final @NotNull TLD WS = new TLD("ws", Type.COUNTRY_CODE, "Government of Samoa Ministry of Foreign Affairs & Trade", LocalDate.parse("1995-07-14"), LocalDate.parse("2021-05-26"));
+    public static final @NotNull TLD WS = new TLD("ws", Type.COUNTRY_CODE, "Government of Samoa Ministry of Foreign Affairs and Trade", LocalDate.parse("1995-07-14"), LocalDate.parse("2021-05-26"));
 
     /**
      * <h2>Registry Information</h2>
@@ -17560,7 +17559,7 @@ public final class TLD implements CharSequence, Serializable {
      * </ul>
      *
      */
-    public static final @NotNull TLD 한국 = new TLD("한국", Type.COUNTRY_CODE, "KISA (Korea Internet & Security Agency)", LocalDate.parse("2011-02-05"), LocalDate.parse("2023-03-07"));
+    public static final @NotNull TLD 한국 = new TLD("한국", Type.COUNTRY_CODE, "KISA (Korea Internet and Security Agency)", LocalDate.parse("2011-02-05"), LocalDate.parse("2023-03-07"));
 
     /**
      * <h2>Registry Information</h2>
@@ -19538,7 +19537,7 @@ public final class TLD implements CharSequence, Serializable {
      * </ul>
      *
      */
-    public static final @NotNull TLD _2eفلسطين‎ = new TLD(".فلسطين‎", Type.COUNTRY_CODE, "Ministry of Telecom & Information Technology (MTIT)", LocalDate.parse("2010-08-20"), LocalDate.parse("2024-02-05"));
+    public static final @NotNull TLD _2eفلسطين‎ = new TLD(".فلسطين‎", Type.COUNTRY_CODE, "Ministry of Telecom and Information Technology (MTIT)", LocalDate.parse("2010-08-20"), LocalDate.parse("2024-02-05"));
 
     /**
      * <h2>IANA Reports</h2>
