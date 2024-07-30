@@ -1,5 +1,6 @@
 package codes.laivy.address.test;
 
+import codes.laivy.address.Address;
 import codes.laivy.address.ip.IPv4Address;
 import codes.laivy.address.ip.IPv6Address;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,13 @@ public class IPv4AddressTest {
     }
     @Test
     @Order(value = 1)
+    void type() {
+        for (@NotNull String string : valids) {
+            Assertions.assertSame(IPv4Address.class, Address.getType(string), "cannot validate ipv4 address using address type '" + string + "'");
+        }
+    }
+    @Test
+    @Order(value = 2)
     void parser() {
         for (@NotNull String string : valids) {
             try {
@@ -93,7 +101,7 @@ public class IPv4AddressTest {
     // Failures
 
     @Test
-    @Order(value = 2)
+    @Order(value = 3)
     void invalidators() {
         @NotNull String[] invalids = new String[] {
                 "999.999.999.999",  // All octets out of range

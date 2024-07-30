@@ -44,6 +44,7 @@ public final class IPv6Address implements IPAddress {
     public static boolean validate(@NotNull String string) {
         // Step 1: Remove the starting square bracket if present
         if (string.startsWith("[")) {
+            if (!string.contains("]")) return false;
             string = string.substring(1);
         }
 
@@ -131,6 +132,7 @@ public final class IPv6Address implements IPAddress {
         if (validate(string)) {
             // Step 2: Remove the starting square bracket if present
             if (string.startsWith("[")) {
+                if (!string.contains("]")) throw new IllegalArgumentException("ipv6 missing bracket close");
                 string = string.substring(1);
             }
 

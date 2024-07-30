@@ -1,5 +1,6 @@
 package codes.laivy.address.test;
 
+import codes.laivy.address.Address;
 import codes.laivy.address.domain.Domain;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
@@ -48,6 +49,13 @@ public class DomainTest {
     }
     @Test
     @Order(value = 1)
+    void type() {
+        for (@NotNull String string : valids) {
+            Assertions.assertSame(Domain.class, Address.getType(string), "cannot validate domain address using address type '" + string + "'");
+        }
+    }
+    @Test
+    @Order(value = 2)
     void parser() {
         for (@NotNull String string : valids) {
             try {

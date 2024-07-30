@@ -1,5 +1,6 @@
 package codes.laivy.address.test;
 
+import codes.laivy.address.Address;
 import codes.laivy.address.exception.IllegalAddressTypeException;
 import codes.laivy.address.ip.IPv4Address;
 import codes.laivy.address.ip.IPv6Address;
@@ -51,6 +52,13 @@ public class IPv6AddressTest {
     }
     @Test
     @Order(value = 1)
+    void type() {
+        for (@NotNull String string : valids) {
+            Assertions.assertSame(IPv6Address.class, Address.getType(string), "cannot validate ipv6 address using address type '" + string + "'");
+        }
+    }
+    @Test
+    @Order(value = 2)
     void parser() {
         for (@NotNull String string : valids) {
             try {
@@ -108,7 +116,7 @@ public class IPv6AddressTest {
     // Failures
 
     @Test
-    @Order(value = 2)
+    @Order(value = 3)
     void invalidators() {
         @NotNull String[] invalids = {
                 "2001:0db8:::85a3:0000:0000:8a2e:0370:7334",     // More than one "::" sequence
