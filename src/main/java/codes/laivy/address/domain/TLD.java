@@ -49,19 +49,6 @@ public final class TLD implements CharSequence, Serializable {
     private static final long serialVersionUID = -5154560316815508774L;
     private static final @NotNull Map<String, TLD> map = new HashMap<>();
 
-    static {
-        for (@NotNull Field field : TLD.class.getDeclaredFields()) try {
-            field.setAccessible(true);
-
-            if (Modifier.isStatic(field.getModifiers())) {
-                @NotNull TLD tld = (TLD) field.get(null);
-                map.put(tld.code.toLowerCase(), tld);
-            }
-        } catch (@NotNull Throwable throwable) {
-            throw new RuntimeException("cannot load TLD field value '" + field + "'");
-        }
-    }
-
     /**
      * Parses a given string into a {@link TLD} object.
      *
@@ -70,8 +57,7 @@ public final class TLD implements CharSequence, Serializable {
      * @throws NullPointerException if the string is not a valid registered TLD
      */
     public static @NotNull TLD parse(@NotNull String string) {
-        string = string.toLowerCase();
-        string = string.replace("-", "_").toUpperCase();
+        string = string.replace("-", "_").toLowerCase();
 
         if (map.containsKey(string)) {
             return map.get(string);
@@ -19885,6 +19871,20 @@ public final class TLD implements CharSequence, Serializable {
      *
      */
     public static final @NotNull TLD ZW = new TLD("zw", Type.COUNTRY_CODE, "Postal and Telecommunications Regulatory Authority of Zimbabwe (POTRAZ)", LocalDate.parse("1991-11-06"), LocalDate.parse("2021-03-11"));
+
+    // Load all these TLDs into a map to optimize retrieving
+    static {
+        for (@NotNull Field field : TLD.class.getDeclaredFields()) try {
+            field.setAccessible(true);
+
+            if (field.getType() == TLD.class && Modifier.isStatic(field.getModifiers())) {
+                @NotNull TLD tld = (TLD) field.get(null);
+                map.put(tld.code.toLowerCase(), tld);
+            }
+        } catch (@NotNull Throwable throwable) {
+            throw new RuntimeException("cannot load TLD field value '" + field + "'", throwable);
+        }
+    }
 
     // Object
 

@@ -42,9 +42,9 @@ public class IPv4AddressTest {
         for (@NotNull String string : valids) {
             try {
                 @NotNull IPv4Address address = IPv4Address.parse(string);
-                Assertions.assertEquals(string, address.getName(), "the address string '" + string + "' has been parsed into a different ipv4 address '" + address + "'");
+                Assertions.assertEquals(address, IPv4Address.parse(address.getName()), "the address string '" + string + "' has been parsed into a different ipv4 address '" + address.getName() + "'");
             } catch (@NotNull Throwable throwable) {
-                throw new IllegalArgumentException("cannot parse '" + string + "' as a valid ipv4 address");
+                throw new IllegalArgumentException("cannot parse '" + string + "' as a valid ipv4 address", throwable);
             }
         }
     }
@@ -67,7 +67,6 @@ public class IPv4AddressTest {
             Assertions.assertEquals(address, clone);
         }
     }
-
     @Test
     void integer() {
         for (@NotNull String string : valids) {

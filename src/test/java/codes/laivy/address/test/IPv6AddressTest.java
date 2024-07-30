@@ -53,7 +53,7 @@ public class IPv6AddressTest {
         for (@NotNull String string : valids) {
             try {
                 @NotNull IPv6Address address = IPv6Address.parse(string);
-                Assertions.assertEquals(address, IPv6Address.parse(address.getName()), "the address string '" + string + "' has been parsed into a different ipv6 address '" + address + "'");
+                Assertions.assertEquals(address, IPv6Address.parse(address.getName()), "the address string '" + string + "' has been parsed into a different ipv6 address '" + IPv6Address.parse(address.getName()) + "'");
             } catch (@NotNull Throwable throwable) {
                 throw new IllegalArgumentException("cannot parse '" + string + "' as a valid ipv6 address", throwable);
             }
