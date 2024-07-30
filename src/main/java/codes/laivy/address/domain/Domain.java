@@ -200,7 +200,7 @@ public final class Domain implements Address, HttpAddress {
      *
      * @return {@code true} if this domain is "localhost", {@code false} otherwise
      */
-    public boolean isLocalhost() {
+    public boolean isLocal() {
         return getTLD() == null && getSLD().equalsIgnoreCase("localhost");
     }
 

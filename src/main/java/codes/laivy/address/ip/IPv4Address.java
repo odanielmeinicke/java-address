@@ -233,7 +233,7 @@ public final class IPv4Address implements IPAddress {
      *
      * @return {@code true} if this IPv4 address is a localhost address; {@code false} otherwise.
      */
-    public boolean isLocalhost() {
+    public boolean isLocal() {
         return octets[0] == 127;
     }
 
@@ -315,7 +315,7 @@ public final class IPv4Address implements IPAddress {
      * @return {@code true} if this IPv4 address is publicly routable; {@code false} otherwise.
      */
     public boolean isPubliclyRoutable() {
-        return !isPrivate() && !isLocalhost() && !isMulticast();
+        return !isPrivate() && !isLocal() && !isMulticast();
     }
 
     /**

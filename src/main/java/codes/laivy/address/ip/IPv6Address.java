@@ -381,6 +381,36 @@ public final class IPv6Address implements IPAddress {
         return new IPv6Address(broadcastGroups);
     }
 
+    /**
+     * Determines if the current IPv6 address belongs to a local network.
+     * Specifically, it checks if the address is a link-local address in the
+     * IPv6 range `fe80::/10`.
+     * Link-local addresses are typically used for
+     * communication within a single network segment or link and are not
+     * routable beyond that link.
+     * <p>
+     * The method performs this check by examining the first 10 bits of the
+     * address's first group of 16 bits (the first element in the `groups` array).
+     * According to the IPv6 standard, link-local addresses have the first 10 bits
+     * set to the binary value `1111 1110 10`.
+     * In hexadecimal, this corresponds to
+     * `0xFE80` when masked with `0xFFC0`.
+     * <p>
+     * This method overrides a method with the same signature in a parent class
+     * or interface.
+     *
+     * @return {@code true} if the IPv6 address is a link-local address, {@code false} otherwise.
+     */
+    @Override
+    public boolean isLocal() {
+        short firstBlock = groups[0];
+
+        int maskedValue = firstBlock & 0xFFC0;
+        int expectedValue = 0xFE80;
+
+        return maskedValue == expectedValue;
+    }
+
     // Implementations
 
     @Override

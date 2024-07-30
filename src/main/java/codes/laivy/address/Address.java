@@ -79,6 +79,22 @@ public interface Address extends Serializable, Cloneable {
      */
     @NotNull String toString(@NotNull Port port);
 
+    /**
+     * Checks if this address belongs to the localhost.
+     *
+     * @return {@code true} if this address is a localhost address; {@code false} otherwise.
+     */
+    boolean isLocal();
+
+    /**
+     * Checks if this address belongs to the remote network.
+     *
+     * @return {@code true} if this address is a remote address; {@code false} otherwise.
+     */
+    default boolean isRemote() {
+        return !isLocal();
+    }
+
     // Cloneable
 
     @NotNull Address clone();
