@@ -1,5 +1,8 @@
 package codes.laivy.address;
 
+import codes.laivy.address.domain.Domain;
+import codes.laivy.address.ip.IPv4Address;
+import codes.laivy.address.ip.IPv6Address;
 import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,29 +27,31 @@ public interface Address extends Serializable {
     // Static initializers
 
     /**
-     * Validates if a given string is either a valid IPv4 or IPv6 address.
+     * Validates if a given string is either a valid IPv4, IPv6 or Domain address.
      *
      * @param string the string to validate.
-     * @return {@code true} if the string is a valid IPv4 or IPv6 address; {@code false} otherwise.
+     * @return {@code true} if the string is a valid IPv4, IPv6 or address; {@code false} otherwise.
      */
     static boolean validate(@NotNull String string) {
-        return IPv4Address.validate(string) || IPv6Address.validate(string);
+        return IPv4Address.validate(string) || IPv6Address.validate(string) || Domain.validate(string);
     }
 
     /**
-     * Parses a given string into an {@link Address} instance, either {@link IPv4Address} or {@link IPv6Address}.
+     * Parses a given string into an {@link Address} instance, either {@link IPv4Address}, {@link IPv6Address} or {@link Domain}.
      *
      * @param string the string to parse.
-     * @return the parsed {@link Address} instance.
-     * @throws IllegalArgumentException if the string cannot be parsed as a valid IPv4 or IPv6 address.
+     * @return the parsed {@link Address} instance. (Can be IPv4, IPv6 and a Domain address)
+     * @throws IllegalArgumentException if the string cannot be parsed as a valid IPv4, IPv6 or Domain address.
      */
     static @NotNull Address parse(@NotNull String string) {
         if (IPv4Address.validate(string)) {
             return IPv4Address.parse(string);
         } else if (IPv6Address.validate(string)) {
             return IPv6Address.parse(string);
+        } else if (Domain.validate(string)) {
+            return Domain.parse(string);
         } else {
-            throw new IllegalArgumentException("Cannot parse '" + string + "' as a valid IPv4 or IPv6 address");
+            throw new IllegalArgumentException("Cannot parse '" + string + "' as a valid IPv4, IPv6 or Domain address");
         }
     }
 

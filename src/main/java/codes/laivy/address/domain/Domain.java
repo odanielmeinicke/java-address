@@ -2,6 +2,7 @@ package codes.laivy.address.domain;
 
 import codes.laivy.address.Address;
 import codes.laivy.address.port.Port;
+import codes.laivy.address.utilities.HttpAddress;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,10 +29,11 @@ import java.util.Objects;
  *   <li>{@link #create(Subdomain[], SLD, TLD)} - Creates a {@code Domain} object from its components.</li>
  * </ul>
  *
+ * @see HttpAddress
  * @author Daniel Meinicke (Laivy)
  * @since 1.1
  */
-public final class Domain implements Address {
+public final class Domain implements Address, HttpAddress {
 
     // Static initializers
 

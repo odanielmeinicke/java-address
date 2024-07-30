@@ -1,4 +1,4 @@
-package codes.laivy.address;
+package codes.laivy.address.ip;
 
 import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ import java.util.function.Function;
  * @author Daniel Meinicke (Laivy)
  * @since 1.0
  */
-public final class IPv6Address implements Address {
+public final class IPv6Address implements IPAddress {
 
     // Static initializers
 
