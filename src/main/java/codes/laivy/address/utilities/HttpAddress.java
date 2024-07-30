@@ -3,6 +3,9 @@ package codes.laivy.address.utilities;
 import codes.laivy.address.Address;
 import codes.laivy.address.domain.Domain;
 import codes.laivy.address.ip.IPAddress;
+import codes.laivy.address.port.Port;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@code HttpAddress} interface represents an address that can be used within the context
@@ -41,4 +44,27 @@ import codes.laivy.address.ip.IPAddress;
  * @see IPAddress
  */
 public interface HttpAddress extends Address {
+
+    /**
+     * Generates the full URL of the host, including the protocol (HTTP/HTTPS),
+     * the address, and the port if specified.
+     *
+     * @param secure {@code true} if the URL should use HTTPS, {@code false} for HTTP
+     * @return the full URL as a {@link String}
+     */
+    default @NotNull String toString(boolean secure, @Nullable Port port) {
+        // Generate http(s)
+        @NotNull String string = (secure ? "https://" : "http://");
+
+        // Convert this address to string
+        if (port != null) string += toString(port);
+        else string += toString();
+
+        // Put a slash at the end
+        if (!string.endsWith("/")) string += "/";
+
+        // Finish
+        return string;
+    }
+
 }

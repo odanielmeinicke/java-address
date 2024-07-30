@@ -376,6 +376,53 @@ public final class IPv6Address implements IPAddress {
     }
 
     /**
+     * Converts the IPv6 address to a full URL string, including the protocol (HTTP/HTTPS),
+     * the address enclosed in square brackets (as required for IPv6), and the port if specified.
+     *
+     * <p>IPv6 addresses must be enclosed in square brackets in URLs to clearly delineate the address
+     * from the port number, as IPv6 addresses contain colons (:) which can otherwise be confused with
+     * the port delimiter.
+     * This format is mandated by URL specification standards to ensure correct
+     * parsing and interpretation of the address and port.
+     *
+     * <p>Example URL formats:
+     * <ul>
+     *   <li>For an IPv6 address with a specified port: {@code "https://[2001:db8::1]:8080/"}</li>
+     *   <li>For an IPv6 address without a port: {@code "https://[2001:db8::1]/"}</li>
+     * </ul>
+     *
+     * <p>The URL is constructed as follows:
+     * <ul>
+     *   <li>Protocol: {@code "http://"} or {@code "https://"} depending on the {@code secure} parameter.</li>
+     *   <li>Address: The IPv6 address enclosed in square brackets. For example, {@code "[2001:db8::1]"}.</li>
+     *   <li>Port: If a port is provided, it is appended after a colon following the address. For example, {@code ":8080"}.</li>
+     *   <li>Trailing Slash: Ensures a trailing slash is present at the end of the URL if not already present.</li>
+     * </ul>
+     *
+     * @param secure {@code true} if the URL should use HTTPS, {@code false} for HTTP
+     * @param port an optional port number to be included in the URL; if {@code null}, no port is included
+     * @return the full URL as a {@link String}, with the IPv6 address enclosed in square brackets
+     */
+    @Override
+    public @NotNull String toString(boolean secure, @Nullable Port port) {
+        // Generate http(s) and start bracket
+        @NotNull String string = (secure ? "https://" : "http://") + '[';
+
+        // Convert this address to string
+        if (port != null) string += toString(port);
+        else string += toString();
+
+        // End bracket
+        string += ']';
+
+        // Put a slash at the end
+        if (!string.endsWith("/")) string += "/";
+
+        // Finish
+        return string;
+    }
+
+    /**
      * Converts this IPv6 address to a 128-bit integer representation.
      * <p>
      * The integer representation is split into two 64-bit integers.

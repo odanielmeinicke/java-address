@@ -286,4 +286,15 @@ public final class Domain implements Address, HttpAddress {
         return this + ":" + port;
     }
 
+    /**
+     * Returns a string representation of this domain, including the specified port number.
+     *
+     * @param port the port number to include in the string representation
+     * @return a string representation of this domain with the port number
+     */
+    @Override
+    public @NotNull Address clone() {
+        return null;
+    }
+
 }

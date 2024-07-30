@@ -22,7 +22,7 @@ import java.io.Serializable;
  * </ul>
  * </p>
  */
-public interface Address extends Serializable {
+public interface Address extends Serializable, Cloneable {
 
     // Static initializers
 
@@ -78,4 +78,9 @@ public interface Address extends Serializable {
      * @return a string representation of this address with the specified port.
      */
     @NotNull String toString(@NotNull Port port);
+
+    // Cloneable
+
+    @NotNull Address clone();
+
 }
