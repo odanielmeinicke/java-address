@@ -49,10 +49,10 @@ public interface Address extends Serializable, Cloneable {
             return null;
         }
 
+        // Verify
         if (string.startsWith("[") || string.split(":").length >= 2) { // IPv6 address
             if (IPv6Address.validate(string)) return IPv6Address.class;
-            else return null;
-        } else if (Character.isDigit(string.charAt(0))) { // Potential IPv4 address
+        } if (Character.isDigit(string.charAt(0))) { // Potential IPv4 address
             if (IPv4Address.validate(string)) return IPv4Address.class;
         }
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 public class DomainTest {
 
     public static final @NotNull String[] valids = {
+            "www.example.com",              // Simple valid domain with www
             "example.com",                  // Simple valid domain
             "sub.example.com",              // Subdomain
             "example.co.uk",                // Country code top-level domain (ccTLD)

@@ -1,8 +1,8 @@
 package codes.laivy.address.domain;
 
 import codes.laivy.address.Address;
+import codes.laivy.address.http.HttpAddress;
 import codes.laivy.address.port.Port;
-import codes.laivy.address.utilities.HttpAddress;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,10 +97,8 @@ public final class Domain implements Address, HttpAddress {
      * @throws IllegalArgumentException if the string cannot be parsed as a valid domain name
      */
     public static @NotNull Domain parse(@NotNull String string) throws IllegalArgumentException {
-        @NotNull String[] parts = string.split(":");
-
         if (validate(string)) {
-            parts = parts[0].split("\\.");
+            @NotNull String[] parts = string.split(":")[0].split("\\.");
 
             @Nullable TLD tld;
             @NotNull SLD sld;
