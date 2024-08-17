@@ -1,7 +1,7 @@
 package codes.laivy.address.ip;
 
 import codes.laivy.address.Address;
-import codes.laivy.address.utilities.HttpAddress;
+import codes.laivy.address.http.HttpAddress;
 
 /**
  * The {@code IPAddress} interface represents a generic Internet Protocol (IP) address.

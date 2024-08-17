@@ -1,8 +1,10 @@
-package codes.laivy.address.utilities;
+package codes.laivy.address.http;
 
 import codes.laivy.address.Address;
 import codes.laivy.address.domain.Domain;
 import codes.laivy.address.ip.IPAddress;
+import codes.laivy.address.ip.IPv4Address;
+import codes.laivy.address.ip.IPv6Address;
 import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +46,47 @@ import org.jetbrains.annotations.Nullable;
  * @see IPAddress
  */
 public interface HttpAddress extends Address {
+
+    // Static initializers
+
+    /**
+     * Validates whether a given string represents a valid http address.
+     *
+     * @param string the string to validate.
+     * @return {@code true} if the string is a valid address; {@code false} otherwise.
+     */
+    static boolean validate(@NotNull String string) {
+        @Nullable Class<? extends Address> type = Address.getType(string);
+        return type != null && HttpAddress.class.isAssignableFrom(type);
+    }
+
+    /**
+     * Parses a string into an {@link HttpAddress} instance, which may be an {@link IPv4Address},
+     * {@link IPv6Address}, or {@link Domain}.
+     *
+     * @param string the string to parse.
+     * @return the parsed {@link Address} instance.
+     * @throws IllegalArgumentException if the string cannot be parsed as a valid address.
+     */
+    static @NotNull HttpAddress parse(@NotNull String string) {
+        @Nullable Class<? extends Address> type = Address.getType(string);
+
+        if (type != null) {
+            if (type == Domain.class) {
+                return Domain.parse(string);
+            } else if (type == IPv4Address.class) {
+                return IPv4Address.parse(string);
+            } else if (type == IPv6Address.class) {
+                return IPv6Address.parse(string);
+            } else {
+                throw new UnsupportedOperationException("Unsupported address class: '" + type.getName() + "'");
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid address: '" + string + "'");
+        }
+    }
+
+    // Object
 
     /**
      * Generates the full URL of the host, including the protocol (HTTP/HTTPS),
