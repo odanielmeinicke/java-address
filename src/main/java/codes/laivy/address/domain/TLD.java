@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -47,7 +46,7 @@ public final class TLD implements CharSequence, Serializable {
     // Static initializers
 
     private static final long serialVersionUID = -5154560316815508774L;
-    private static final @NotNull Map<String, TLD> map = new HashMap<>();
+    static final @NotNull Map<String, TLD> map = new HashMap<>();
 
     /**
      * Parses a given string into a {@link TLD} object.
@@ -73,11 +72,7 @@ public final class TLD implements CharSequence, Serializable {
      * @return {@code true} if the TLD exists and is known by IANA, {@code false} otherwise
      */
     public static boolean isKnown(@NotNull String string) {
-        if (validate(string)) {
-            return Arrays.stream(TLD.class.getDeclaredFields()).anyMatch(field -> field.getName().equals(string.replace("-", "_").toUpperCase()));
-        } else {
-            return false;
-        }
+        return map.containsKey(string.replace("-", "_").toLowerCase());
     }
 
     /**
@@ -19904,7 +19899,7 @@ public final class TLD implements CharSequence, Serializable {
      * @param update the local date this TLD was last updated at IANA
      * @throws IllegalArgumentException if the code is not a valid TLD pattern
      */
-    private TLD(@NotNull String code, @NotNull Type type, @Nullable String provider, @Nullable LocalDate registration, @NotNull LocalDate update) {
+    public TLD(@NotNull String code, @NotNull Type type, @Nullable String provider, @Nullable LocalDate registration, @NotNull LocalDate update) {
         this.code = code.toLowerCase();
         this.type = type;
         this.provider = provider;

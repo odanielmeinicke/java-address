@@ -33,7 +33,7 @@ public class HttpHostTest {
                 "https://192.168.1.1:8080/path/cool"
         };
 
-        return Stream.of(DomainTest.valids, IPv4AddressTest.valids, IPv6AddressTest.valids, valids).flatMap(Arrays::stream).toArray(String[]::new);
+        return Stream.of(Arrays.stream(DomainTest.valids).map(DomainTest.Matcher::getInput).toArray(String[]::new), IPv4AddressTest.valids, IPv6AddressTest.valids, valids).flatMap(Arrays::stream).toArray(String[]::new);
     }
 
     // Object

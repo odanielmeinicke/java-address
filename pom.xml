@@ -6,7 +6,7 @@
 
     <groupId>codes.laivy</groupId>
     <artifactId>java-address</artifactId>
-    <version>1.2</version>
+    <version>1.2.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>An ultra-lightweight library for handling internet addresses and communication protocols, including IPv4, IPv6 and Domains.</description>

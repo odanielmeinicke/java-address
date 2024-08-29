@@ -105,7 +105,7 @@ public interface Address extends Serializable, Cloneable {
 
     /**
      * Returns the textual representation of the address,
-     * such as "192.168.0.1" for an IPv4 address or just the TLD and SLD of a domain.
+     * such as "192.168.0.1" for an IPv4 address or just the main SLD of a domain.
      *
      * @return the string representation of the address.
      */

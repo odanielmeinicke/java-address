@@ -86,6 +86,15 @@ public final class SLD implements CharSequence, Serializable {
     // Getters
 
     /**
+     * Returns true if this SLD can be used to represent a valid known TLD name
+     *
+     * @return true if this SLD is a valid known TLD name
+     */
+    public boolean isKnownTLD() {
+        return TLD.map.containsKey(string.replace("-", "_").toLowerCase());
+    }
+
+    /**
      * Returns the length of the SLD string.
      *
      * @return the length of the SLD string

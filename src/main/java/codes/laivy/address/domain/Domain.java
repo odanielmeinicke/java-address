@@ -10,34 +10,34 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * The {@code Domain} class represents a fully qualified domain name (FQDN) in the Domain Name System (DNS).
- * A domain name typically consists of a sequence of labels separated by dots, such as "www.example.com".
- * This class encapsulates the components of a domain name, including subdomains, second-level domains (SLDs), and top-level domains (TLDs).
+ * Represents a domain name, which includes subdomains, a second-level domain (SLD), and an optional top-level domain (TLD).
+ * This class also handles special cases such as "localhost".
  *
- * <p>Domain names are hierarchical, with each label in the name representing a node in the domain namespace.
- * The hierarchy starts from the rightmost label, known as the top-level domain (TLD), and progresses to the left.
- * For example, in "www.example.com", "com" is the TLD, "example" is the SLD, and "www" is a subdomain.</p>
+ * <p>The {@code Domain} class provides various methods to validate, parse, and manage domain names, including
+ * subdomains, SLDs, and TLDs. It also offers utility methods to convert the domain into different representations
+ * like byte arrays or string formats with optional port numbers.</p>
  *
- * <p>This class provides methods for validating, parsing, and creating domain names, as well as retrieving their components.
- * It also implements the {@code Address} interface, allowing domain names to be used as network addresses.</p>
+ * <p>This class is immutable and thread-safe.</p>
  *
- * <h2>Static Initializers</h2>
- * <p>The class includes static methods for validating and parsing domain names:</p>
- * <ul>
- *   <li>{@link #validate(String)} - Validates whether a given string is a valid domain name.</li>
- *   <li>{@link #parse(String)} - Parses a string into a {@code Domain} object.</li>
- *   <li>{@link #create(Subdomain[], SLD, TLD)} - Creates a {@code Domain} object from its components.</li>
- * </ul>
+ * <h3>Usage Example:</h3>
+ * <pre>{@code
+ * Domain domain = Domain.parse("www.example.com");
+ * String domainName = domain.getName(); // returns "example"
+ * boolean isLocal = domain.isLocal(); // returns false
+ * }</pre>
  *
- * @see HttpAddress
- * @author Daniel Meinicke (Laivy)
- * @since 1.1
+ * <p>Note: This class assumes valid domain names follow the structure defined in common domain name system (DNS)
+ * practices, including the handling of "localhost" as a special case.</p>
+ *
+ * @see SLD
+ * @see TLD
+ * @see Subdomain
  */
 public final class Domain implements Address, HttpAddress {
 
     // Static initializers
 
-    private static final long serialVersionUID = -3053834275420857080L;
+    private static final long serialVersionUID = 1325278871227725319L;
 
     /**
      * Validates whether a given string is a valid domain name.
@@ -48,6 +48,9 @@ public final class Domain implements Address, HttpAddress {
      *   <li>The domain part must consist of valid subdomain, SLD, and TLD components.</li>
      *   <li>Special handling for the "localhost" domain, which is considered valid.</li>
      * </ul>
+     *
+     * <p>This method performs strict validation, ensuring that each component of the domain name conforms to
+     * standard DNS rules. If the string includes a port number, it must also be validated as a valid port.</p>
      *
      * @param string the string to validate
      * @return {@code true} if the string is a valid domain name, {@code false} otherwise
@@ -92,6 +95,10 @@ public final class Domain implements Address, HttpAddress {
      * <p>The string must represent a valid domain name, which is verified by the {@link #validate(String)} method.
      * The parsed components include subdomains, SLD, and TLD, with special handling for "localhost".</p>
      *
+     * <p>If the string cannot be parsed as a valid domain name, this method throws an {@code IllegalArgumentException}.
+     * The parsing logic is robust, handling different cases such as the presence of a port number and special domains
+     * like "localhost".</p>
+     *
      * @param string the string to parse
      * @return a {@code Domain} object representing the parsed domain name
      * @throws IllegalArgumentException if the string cannot be parsed as a valid domain name
@@ -102,60 +109,71 @@ public final class Domain implements Address, HttpAddress {
 
             @Nullable TLD tld;
             @NotNull SLD sld;
+            @NotNull String name;
             @NotNull Subdomain[] subdomains;
 
             if (parts[parts.length - 1].equalsIgnoreCase("localhost")) {
                 tld = null;
-
                 sld = SLD.parse(parts[parts.length - 1]);
+
+                name = sld.toString();
                 subdomains = parts.length > 1 ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 1)).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
             } else {
                 tld = TLD.parse(parts[parts.length - 1]);
                 sld = SLD.parse(parts[parts.length - 2]);
-                subdomains = parts.length > 2 ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 2)).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
+
+                int increment = sld.isKnownTLD() ? 1 : 0;
+
+                name = parts[parts.length - (2 + increment)];
+                subdomains = parts.length > (2 + increment) ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - (2 + increment))).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
             }
 
-            return new Domain(subdomains, sld, tld);
+            return new Domain(subdomains, name, sld, tld);
         } else {
             throw new IllegalArgumentException("cannot parse '" + string + "' as a valid name address");
         }
     }
 
     /**
-     * Creates a {@code Domain} object from its components.
+     * Creates a new {@code Domain} instance using the provided subdomains, SLD, and TLD.
      *
-     * <p>This method constructs a domain name from the provided subdomains, SLD, and TLD components.
-     * The constructed domain name is validated to ensure it adheres to DNS naming conventions.</p>
+     * <p>This factory method is used when you already have the individual components of a domain and want to create
+     * a {@code Domain} object. The method ensures that the provided subdomains and TLD are valid and conform to
+     * the rules defined for domain names.</p>
      *
-     * @param subdomains an array of subdomains
-     * @param sld the second-level domain
-     * @param tld the top-level domain (nullable for "localhost")
-     * @return a {@code Domain} object representing the constructed domain name
-     * @throws IllegalArgumentException if the constructed domain name is not valid
+     * @param subdomains an array of {@code Subdomain} objects representing the subdomains
+     * @param name the name of the SLD
+     * @param sld the {@code SLD} object representing the second-level domain
+     * @param tld the {@code TLD} object representing the top-level domain, or {@code null} for "localhost"
+     * @return a {@code Domain} object representing the specified domain
+     * @throws IllegalArgumentException if the subdomains array contains a wildcard along with other subdomains
      */
-    public static @NotNull Domain create(@NotNull Subdomain @NotNull [] subdomains, @NotNull SLD sld, @Nullable TLD tld) {
-        return new Domain(subdomains, sld, tld);
+    public static @NotNull Domain create(@NotNull Subdomain @NotNull [] subdomains, @NotNull String name, @NotNull SLD sld, @Nullable TLD tld) {
+        return new Domain(subdomains, name, sld, tld);
     }
 
     // Object
 
     private final @NotNull Subdomain @NotNull [] subdomains;
+    private final @NotNull String name;
     private final @NotNull SLD sld;
     private final @Nullable TLD tld;
 
     /**
-     * Constructs a {@code Domain} object.
+     * Constructs a new {@code Domain} instance.
      *
-     * <p>This constructor is private and is intended to be called by the static {@link #create(Subdomain[], SLD, TLD)} method.
-     * It initializes the domain name components and performs validation to ensure the domain name is valid.</p>
+     * <p>This constructor is used internally and should be invoked through the factory methods {@link #parse(String)}
+     * or {@link #create(Subdomain[], String, SLD, TLD)} to ensure proper validation of the domain components.</p>
      *
-     * @param subdomains an array of subdomains
-     * @param sld the second-level domain
-     * @param tld the top-level domain (nullable for "localhost")
-     * @throws IllegalArgumentException if the domain name is not valid
+     * @param subdomains an array of {@code Subdomain} objects representing the subdomains
+     * @param name the name of the SLD
+     * @param sld the {@code SLD} object representing the second-level domain
+     * @param tld the {@code TLD} object representing the top-level domain, or {@code null} for "localhost"
+     * @throws IllegalArgumentException if the subdomains array contains a wildcard along with other subdomains
      */
-    private Domain(@NotNull Subdomain @NotNull [] subdomains, @NotNull SLD sld, @Nullable TLD tld) {
+    private Domain(@NotNull Subdomain @NotNull [] subdomains, @NotNull String name, @NotNull SLD sld, @Nullable TLD tld) {
         this.subdomains = subdomains;
+        this.name = name;
         this.sld = sld;
         this.tld = tld;
 
@@ -168,6 +186,8 @@ public final class Domain implements Address, HttpAddress {
 
     /**
      * Returns the subdomains of this domain.
+     *
+     * <p>The returned array is a copy, ensuring that the internal state of the domain is not modified externally.</p>
      *
      * @return an array of {@code Subdomain} objects representing the subdomains
      */
@@ -196,6 +216,9 @@ public final class Domain implements Address, HttpAddress {
     /**
      * Checks whether this domain is "localhost".
      *
+     * <p>This method provides a quick check to determine if the domain is the special "localhost" domain,
+     * which does not include a TLD.</p>
+     *
      * @return {@code true} if this domain is "localhost", {@code false} otherwise
      */
     public boolean isLocal() {
@@ -207,6 +230,9 @@ public final class Domain implements Address, HttpAddress {
     /**
      * Returns the byte array representation of this domain name.
      *
+     * <p>This method converts the full domain name (including subdomains, SLD, and TLD) into a byte array.
+     * This is particularly useful for network transmission or storage in binary formats.</p>
+     *
      * @return a byte array representing this domain name
      */
     @Override
@@ -215,20 +241,24 @@ public final class Domain implements Address, HttpAddress {
     }
 
     /**
-     * Returns the name of this domain, consisting of the SLD and TLD.
+     * Returns the domain name without the TLD and subdomains.
      *
-     * @return a string representing the domain name
+     * <p>For example, given a domain "www.example.com", this method returns "example".</p>
+     *
+     * @return the second-level domain (SLD) name
      */
     @Override
     public @NotNull String getName() {
-        return getSLD() + (getTLD() != null ? "." + getTLD() : "");
+        return name;
     }
 
     // Implementations
 
     /**
-     * Compares this domain to the specified object. The result is {@code true} if and only if the argument is not {@code null}
-     * and is a {@code Domain} object that represents the same domain name as this object.
+     * Compares this domain to the specified object.
+     *
+     * <p>The comparison checks for equality by considering the subdomains, name, SLD, and TLD. Two {@code Domain}
+     * objects are considered equal if they represent the exact same domain name.</p>
      *
      * @param message the object to compare this {@code Domain} against
      * @return {@code true} if the given object represents a {@code Domain} equivalent to this domain, {@code false} otherwise
@@ -238,21 +268,26 @@ public final class Domain implements Address, HttpAddress {
         if (this == message) return true;
         if (!(message instanceof Domain)) return false;
         @NotNull Domain domain = (Domain) message;
-        return Objects.deepEquals(getSubdomains(), domain.getSubdomains()) && Objects.equals(getSLD(), domain.getSLD()) && Objects.equals(getTLD(), domain.getTLD());
+        return Objects.deepEquals(getSubdomains(), domain.getSubdomains()) && Objects.equals(getName(), domain.getName()) && Objects.equals(getSLD(), domain.getSLD()) && Objects.equals(getTLD(), domain.getTLD());
     }
 
     /**
      * Returns a hash code value for this domain.
      *
+     * <p>The hash code is computed based on the subdomains, name, SLD, and TLD, ensuring that equal domains have the same hash code.</p>
+     *
      * @return a hash code value for this domain
      */
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(getSubdomains()), getSLD(), getTLD());
+        return Objects.hash(Arrays.hashCode(getSubdomains()), getName(), getSLD(), getTLD());
     }
 
     /**
-     * Returns a string representation of this domain. The string representation consists of the subdomains, SLD, and TLD.
+     * Returns a string representation of this domain.
+     *
+     * <p>The string representation includes the subdomains, SLD, and TLD, with appropriate dot separators.
+     * This method is particularly useful for displaying the domain name in logs or user interfaces.</p>
      *
      * @return a string representation of this domain
      */
@@ -262,6 +297,10 @@ public final class Domain implements Address, HttpAddress {
 
         for (@NotNull Subdomain subdomain : getSubdomains()) {
             builder.append(subdomain).append(".");
+        }
+
+        if (getSLD().isKnownTLD()) {
+            builder.append(getName()).append(".");
         }
 
         builder.append(getSLD());
