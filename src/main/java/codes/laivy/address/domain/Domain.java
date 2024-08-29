@@ -37,6 +37,20 @@ public final class Domain implements Address, HttpAddress {
 
     // Static initializers
 
+    /**
+     * Special-use domain names like "localhost"
+     * See more at <a href="https://en.wikipedia.org/wiki/Special-use_domain_name">Wikipedia</a>
+     */
+    public static @NotNull String @NotNull [] SPECIAL = new String[] {
+            "example",
+            "localhost",
+            "invalid",
+            "local",
+            "onion",
+            "test",
+            "alt"
+    };
+
     private static final long serialVersionUID = 1325278871227725319L;
 
     /**
@@ -65,20 +79,44 @@ public final class Domain implements Address, HttpAddress {
                 return false;
             }
 
-            parts = parts[0].split("\\.");
+            @NotNull String[] domain = parts[0].split("\\.");
 
-            if (parts.length == 0) {
+            if (domain.length == 0) {
                 return false;
-            } else if (parts[parts.length - 1].equalsIgnoreCase("localhost")) {
-                if (parts.length > 1 && Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 1)).anyMatch(subdomain -> !Subdomain.validate(subdomain))) {
+            } else if (domain.length == 1 || Arrays.stream(SPECIAL).anyMatch(special -> special.equalsIgnoreCase(domain[domain.length - 1]))) {
+                for (@NotNull String subdomain : parts.length > 1 ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 1)).toArray(String[]::new) : new String[0]) {
+                    if (!Subdomain.validate(subdomain)) {
+                        return false;
+                    }
+                }
+
+                for (@NotNull String special : SPECIAL) {
+                    if (special.equalsIgnoreCase(domain[domain.length - 1])) {
+                        return true;
+                    }
+                }
+
+                return false;
+            } else {
+                @NotNull String tldString = domain[domain.length - 1];
+                @NotNull String sldString = domain[domain.length - 2];
+
+                if (!TLD.validate(tldString)) {
+                    return false;
+                } else if (!SLD.validate(sldString)) {
                     return false;
                 }
-            } else {
-                if (!TLD.validate(parts[parts.length - 1])) {
+
+                @NotNull SLD sld = SLD.parse(sldString);
+                boolean known = sld.isKnownTLD();
+
+                if (known && domain.length == 2) {
                     return false;
-                } else if (!SLD.validate(parts[parts.length - 2])) {
-                    return false;
-                } else if (parts.length > 2 && Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 2)).anyMatch(subdomain -> !Subdomain.validate(subdomain))) {
+                }
+
+                @NotNull String name = domain[domain.length - 2 + (known ? 1 : 0)];
+
+                if (domain.length > 2 + (known ? 1 : 0) && Arrays.stream(Arrays.copyOfRange(domain, 0, domain.length - (known ? 1 : 0))).anyMatch(subdomain -> !Subdomain.validate(subdomain))) {
                     return false;
                 }
             }
@@ -112,23 +150,35 @@ public final class Domain implements Address, HttpAddress {
             @NotNull String name;
             @NotNull Subdomain[] subdomains;
 
-            if (parts[parts.length - 1].equalsIgnoreCase("localhost")) {
-                tld = null;
-                sld = SLD.parse(parts[parts.length - 1]);
+            if (parts.length == 1 || Arrays.stream(SPECIAL).anyMatch(special -> special.equalsIgnoreCase(parts[parts.length - 1]))) {
+                for (@NotNull String special : SPECIAL) {
+                    if (special.equalsIgnoreCase(parts[parts.length - 1])) {
+                        sld = SLD.parse(parts[parts.length - 1]);
 
-                name = sld.toString();
-                subdomains = parts.length > 1 ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 1)).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
+                        name = sld.toString();
+                        subdomains = parts.length > 1 ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - 1)).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
+
+                        return new Domain(subdomains, name, sld, null);
+                    }
+                }
+
+                throw new IllegalArgumentException("unknown special domain name '" + string + "'");
             } else {
                 tld = TLD.parse(parts[parts.length - 1]);
                 sld = SLD.parse(parts[parts.length - 2]);
+                boolean known = sld.isKnownTLD();
 
-                int increment = sld.isKnownTLD() ? 1 : 0;
+                if (known && parts.length == 2) {
+                    throw new IllegalArgumentException("missing domain name! '" + string + "'");
+                }
+
+                int increment = known ? 1 : 0;
 
                 name = parts[parts.length - (2 + increment)];
                 subdomains = parts.length > (2 + increment) ? Arrays.stream(Arrays.copyOfRange(parts, 0, parts.length - (2 + increment))).map(Subdomain::create).toArray(Subdomain[]::new) : new Subdomain[0];
-            }
 
-            return new Domain(subdomains, name, sld, tld);
+                return new Domain(subdomains, name, sld, tld);
+            }
         } else {
             throw new IllegalArgumentException("cannot parse '" + string + "' as a valid name address");
         }

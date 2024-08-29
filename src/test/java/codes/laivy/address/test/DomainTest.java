@@ -6,6 +6,7 @@ import codes.laivy.address.domain.SLD;
 import codes.laivy.address.domain.Subdomain;
 import codes.laivy.address.domain.TLD;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
@@ -14,6 +15,21 @@ import java.util.Arrays;
 public class DomainTest {
 
     public static final @NotNull Matcher[] valids = {
+            new Matcher("localhost", "localhost", SLD.parse("localhost"), null),
+            new Matcher("www.localhost", "localhost", SLD.parse("localhost"), null, Subdomain.WWW),
+            new Matcher("example", "example", SLD.parse("example"), null),
+            new Matcher("www.example", "example", SLD.parse("example"), null, Subdomain.WWW),
+            new Matcher("invalid", "invalid", SLD.parse("invalid"), null),
+            new Matcher("www.invalid", "invalid", SLD.parse("invalid"), null, Subdomain.WWW),
+            new Matcher("local", "local", SLD.parse("local"), null),
+            new Matcher("www.local", "local", SLD.parse("local"), null, Subdomain.WWW),
+            new Matcher("onion", "onion", SLD.parse("onion"), null),
+            new Matcher("www.onion", "onion", SLD.parse("onion"), null, Subdomain.WWW),
+            new Matcher("test", "test", SLD.parse("test"), null),
+            new Matcher("www.test", "test", SLD.parse("test"), null, Subdomain.WWW),
+            new Matcher("alt", "alt", SLD.parse("alt"), null),
+            new Matcher("www.alt", "alt", SLD.parse("alt"), null, Subdomain.WWW),
+
             new Matcher("www.example.com", "example", SLD.parse("example"), TLD.COM, Subdomain.WWW),
             new Matcher("example.com", "example", SLD.parse("example"), TLD.COM),
             new Matcher("sub.example.com", "example", SLD.parse("example"), TLD.COM, Subdomain.create("sub")),
@@ -45,6 +61,13 @@ public class DomainTest {
             new Matcher("example.gov", "example", SLD.parse("example"), TLD.GOV),
             new Matcher("example.jobs", "example", SLD.parse("example"), TLD.JOBS)
     };
+    public static final @NotNull String[] invalids = new String[] {
+            "",
+            "com.br",
+            ".example.com.br",
+            "*.example.com.br",
+            "dawadad"
+    };
 
     @Test
     @Order(value = 0)
@@ -69,6 +92,16 @@ public class DomainTest {
                 Assertions.assertEquals(address, Domain.parse(address.toString()), "the address string '" + matcher.input + "' has been parsed into a different domain address '" + Domain.parse(address.toString()) + "'");
             } catch (@NotNull Throwable throwable) {
                 throw new IllegalArgumentException("cannot parse '" + matcher.input + "' as a valid domain address", throwable);
+            }
+        }
+    }
+
+    @Test
+    @Order(value = 3)
+    void invalids() {
+        for (@NotNull String invalid : invalids) {
+            if (Domain.validate(invalid)) {
+                throw new IllegalStateException("cannot invalid domain '" + invalid + "'");
             }
         }
     }
@@ -101,9 +134,9 @@ public class DomainTest {
         private final @NotNull Subdomain @NotNull [] subdomains;
         private final @NotNull String name;
         private final @NotNull SLD sld;
-        private final @NotNull TLD tld;
+        private final @Nullable TLD tld;
 
-        public Matcher(@NotNull String input, @NotNull String name, @NotNull SLD sld, @NotNull TLD tld, @NotNull Subdomain @NotNull ... subdomains) {
+        public Matcher(@NotNull String input, @NotNull String name, @NotNull SLD sld, @Nullable TLD tld, @NotNull Subdomain @NotNull ... subdomains) {
             this.input = input;
             this.name = name;
             this.sld = sld;
@@ -125,13 +158,17 @@ public class DomainTest {
         public @NotNull SLD getSLD() {
             return sld;
         }
-        public @NotNull TLD getTLD() {
+        public @Nullable TLD getTLD() {
             return tld;
         }
 
         // Validators
 
         private void validate() {
+            if (!Domain.validate(input)) {
+                throw new IllegalStateException("cannot validate domain '" + input + "'");
+            }
+
             @NotNull Domain domain = Domain.parse(input);
             Assertions.assertArrayEquals(subdomains, domain.getSubdomains(), "The subdomains doesn't matches for input '" + input + "' and expected '" + Arrays.toString(subdomains) + "'");
             Assertions.assertEquals(name, domain.getName(), "The name doesn't matches for input '" + input + "' and expected '" + name + "'");
