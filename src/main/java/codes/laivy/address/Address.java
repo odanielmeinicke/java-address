@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Represents a network address, providing a unified interface for various address types
@@ -26,6 +28,7 @@ import java.io.Serializable;
  * validate address formats, and determine address types.
  * </p>
  */
+// todo: Address#localhost method
 public interface Address extends Serializable, Cloneable {
 
     /**
@@ -76,7 +79,7 @@ public interface Address extends Serializable, Cloneable {
      *
      * @param string the string to parse.
      * @return the parsed {@link Address} instance.
-     * @throws IllegalArgumentException if the string cannot be parsed as a valid address.
+     * @throws IllegalArgumentException if the string cannot be parsed into a valid address.
      */
     static @NotNull Address parse(@NotNull String string) {
         @Nullable Class<? extends Address> type = getType(string);
@@ -94,6 +97,18 @@ public interface Address extends Serializable, Cloneable {
         } else {
             throw new IllegalArgumentException("Invalid address: '" + string + "'");
         }
+    }
+
+    /**
+     * Parses an {@link java.net.InetAddress} instance into an {@link Address} instance, which may be an {@link IPv4Address},
+     * {@link IPv6Address}, or {@link Domain}.
+     *
+     * @param address the inet address to parse.
+     * @return the parsed {@link Address} instance.
+     */
+    static @NotNull Address parse(@NotNull InetAddress address) {
+        // todo: check this
+        return parse(address.getHostAddress());
     }
 
     /**
@@ -118,6 +133,22 @@ public interface Address extends Serializable, Cloneable {
      * @return the string representation of the address with the specified port.
      */
     @NotNull String toString(@NotNull Port port);
+
+    /**
+     * Converts this address object to an {@link InetAddress} object
+     * It doesn't throws the {@link UnknownHostException} because this object
+     * (should) already have all verifications to validate this address format
+     *
+     * @see InetAddress
+     * @return a {@link InetAddress} object with the same data as this
+     */
+    default @NotNull InetAddress getInetAddress() {
+        try {
+            return InetAddress.getByName(getName());
+        } catch (@NotNull UnknownHostException e) {
+            throw new RuntimeException("this address object isn't compatible with the InetAddress format", e);
+        }
+    }
 
     /**
      * Determines if this address is a localhost address.
