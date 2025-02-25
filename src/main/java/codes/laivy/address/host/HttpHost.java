@@ -9,42 +9,25 @@ import codes.laivy.address.port.Port;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
- * Represents an HTTP host that contains an {@link HttpAddress}, an optional {@link Port}, and an optional {@link Protocol}.
- * This class extends {@link Host} and is designed to handle HTTP-related network addresses, including the HTTP and HTTPS protocols.
- * <p>
- * An HTTP host is defined as a combination of:
- * <ul>
- *     <li>An {@link HttpAddress}, which can represent an IPv4, IPv6, or domain address.
- *     <li>An optional {@link Port} that specifies the port used by the HTTP host.
- *     <li>An optional {@link Protocol} which indicates whether the host uses HTTP or HTTPS.
- * </ul>
- * This class provides methods to validate and parse HTTP host strings, making it useful for applications
- * handling HTTP connections. It also includes methods to determine whether the host is secure (i.e., using HTTPS).
+ * Represents an HTTP host, which is an extension of {@link Host} that specializes in handling
+ * HTTP-specific addresses, including IPv4, IPv6, and domain names.
+ * This class also provides
+ * methods to parse and validate host strings in the context of HTTP protocols.
  *
- * @param <T> the type of {@link HttpAddress}, constrained to subclasses of {@link HttpAddress}
+ * @param <T> The type of {@link HttpAddress} this host will handle.
  */
 public class HttpHost<T extends HttpAddress> extends Host<T> {
 
-    // Static initializers
-
     /**
-     * Validates whether the given string represents a valid HTTP host.
-     * <p>
-     * This method performs the following steps:
-     * <ol>
-     *     <li>Checks for the presence of HTTP or HTTPS protocol prefixes. If present, they are removed.
-     *     <li>Removes any path components from the host string.
-     *     <li>Identifies the type of address (IPv4, IPv6, or domain) using {@link Address#getType(String)}.
-     *     <li>For IPv6 addresses, validates the presence of brackets and port numbers.
-     *     <li>For domain or IPv4 addresses, checks whether a valid port is specified, if any.
-     * </ol>
-     * The method returns {@code true} if the string represents a valid HTTP host, or {@code false} otherwise.
+     * Validates a given string to determine whether it represents a valid HTTP or HTTPS host.
+     * This method checks if the string begins with either the "http://" or "https://" prefix,
+     * then removes the protocol and path to evaluate only the address and optional port.
+     * It verifies that the address corresponds to a valid {@link HttpAddress}, which can be
+     * either an IPv4 address, an IPv6 address, or a domain name.
      *
-     * @param string the string to validate as an HTTP host
-     * @return {@code true} if the string is a valid HTTP host, {@code false} otherwise
+     * @param string the string to validate, representing an HTTP or HTTPS host.
+     * @return {@code true} if the string is a valid HTTP or HTTPS host, {@code false} otherwise.
      */
     public static boolean validate(@NotNull String string) {
         // HTTP or HTTPs protocols
@@ -83,31 +66,24 @@ public class HttpHost<T extends HttpAddress> extends Host<T> {
     }
 
     /**
-     * Parses a string into an {@link HttpHost} instance, extracting the address, port, and protocol.
+     * Parses a given string into an {@link HttpHost} object. This method strips the HTTP or
+     * HTTPS protocol prefix, removes any path, and attempts to create a valid {@link HttpHost}
+     * object by determining whether the address is an IPv4, IPv6, or domain name, with or without
+     * a port. If the string contains a port, it is parsed and added to the resulting {@link HttpHost}.
      * <p>
-     * This method performs the following steps:
-     * <ol>
-     *     <li>Identifies and removes the HTTP or HTTPS protocol, if present.
-     *     <li>Removes any path components from the string.
-     *     <li>Determines the type of address (IPv4, IPv6, or domain) using {@link Address#getType(String)}.
-     *     <li>Parses the {@link HttpAddress} and optional {@link Port}.
-     * </ol>
-     * If the string does not represent a valid HTTP host, an {@link IllegalArgumentException} is thrown.
+     * If the address type is unsupported, an {@link UnsupportedOperationException} is thrown.
      *
-     * @param string the string to parse as an HTTP host
-     * @return an {@link HttpHost} instance representing the parsed HTTP host
-     * @throws IllegalArgumentException if the string does not represent a valid HTTP host
+     * @param string the string to parse, which must represent a valid HTTP or HTTPS host.
+     * @return a {@link HttpHost} instance corresponding to the parsed host string.
+     * @throws IllegalArgumentException if the string does not represent a valid address.
+     * @throws UnsupportedOperationException if the address type is unsupported.
      */
     public static @NotNull HttpHost<?> parse(@NotNull String string) {
         // Parse protocols
-        @Nullable Protocol protocol = null;
-
         if (string.toLowerCase().startsWith("http://")) {
             string = string.substring(7);
-            protocol = Protocol.HTTP;
         } else if (string.toLowerCase().startsWith("https://")) {
             string = string.substring(8);
-            protocol = Protocol.HTTPS;
         }
 
         // Remove the path
@@ -130,12 +106,12 @@ public class HttpHost<T extends HttpAddress> extends Host<T> {
 
         if (type == IPv6Address.class) {
             address = IPv6Address.parse(string);
-
+            
             if (string.startsWith("[") && string.contains("]:")) { // Has port
                 port = Port.parse(string.substring(string.indexOf("]:") + 2));
             }
 
-            return new HttpHost<>((IPv6Address) address, port, protocol);
+            return new HttpHost<>((IPv6Address) address, port);
         } else if (type == IPv4Address.class) {
             address = IPv4Address.parse(string);
         } else if (type == Domain.class) {
@@ -149,110 +125,49 @@ public class HttpHost<T extends HttpAddress> extends Host<T> {
             if (parts.length == 2) port = Port.parse(parts[1]);
         }
 
-        return new HttpHost<>(address, port, protocol);
+        return new HttpHost<>(address, port);
     }
 
     // Object
 
-    private final @Nullable Protocol protocol;
-
     /**
-     * Constructs a new {@code HttpHost} with the specified address, port, and protocol.
-     * <p>
-     * The address must be a subclass of {@link HttpAddress}, while the port and protocol are optional.
+     * Constructs a new {@link HttpHost} instance with the specified {@link HttpAddress} and
+     * {@link Port}. This constructor is used to initialize an HTTP host object with an address
+     * and optional port, without specifying any particular protocol.
      *
-     * @param address  the HTTP address of the host, must not be {@code null}
-     * @param port     the port of the host, may be {@code null}
-     * @param protocol the protocol of the host (HTTP or HTTPS), may be {@code null}
+     * @param address the {@link HttpAddress} of this host, which must not be {@code null}.
+     * @param port    the {@link Port} of this host, which can be {@code null}.
      */
-    public HttpHost(@NotNull T address, @Nullable Port port, @Nullable Protocol protocol) {
+    public HttpHost(@NotNull T address, @Nullable Port port) {
         super(address, port);
-        this.protocol = protocol;
-    }
-
-    // Getters
-
-    /**
-     * Returns the name representation without the protocol of this http host
-     *
-     * @return the name without protocol
-     */
-    @Override
-    public @NotNull String getName() {
-        return super.toString();
-    }
-
-    /**
-     * Returns the {@link Protocol} of this HTTP host, which may be {@code null}.
-     * The protocol can be null if the host does not have an explicit "http://" or "https://".
-     *
-     * @return the protocol, or {@code null} if not explicitly set
-     */
-    public @Nullable Protocol getProtocol() {
-        return protocol;
-    }
-
-    /**
-     * Checks if the protocol used by this host is secure (HTTPS).
-     *
-     * @return {@code true} if the protocol is HTTPS, {@code false} otherwise
-     */
-    public boolean isSecure() {
-        return getProtocol() != null && getProtocol() == Protocol.HTTPS;
     }
 
     // Implementations
 
-    @Override
-    public boolean equals(@Nullable Object object) {
-        if (this == object) return true;
-        if (!(object instanceof HttpHost)) return false;
-        if (!super.equals(object)) return false;
-        @NotNull HttpHost<?> httpHost = (HttpHost<?>) object;
-        return getProtocol() == httpHost.getProtocol();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getProtocol());
-    }
-
-    @Override
-    public @NotNull String toString() {
-        return (getProtocol() != null ? getProtocol().toString() : "") + super.toString();
-    }
-
+    /**
+     * Creates a deep copy of this {@link HttpHost} instance. This method performs a deep
+     * cloning of the host address and creates a new {@link HttpHost} instance with the
+     * same address and port.
+     *
+     * @return a new {@link HttpHost} instance that is a clone of this instance.
+     */
     @Override
     public @NotNull HttpHost<T> clone() {
         return (HttpHost<T>) super.clone();
     }
 
+    /**
+     * Creates a new {@link HttpHost} instance with the same address but a new specified port.
+     * This method is useful when you want to change the port of an existing host without
+     * modifying the address.
+     *
+     * @param newPort the new {@link Port} to set, which can be {@code null}.
+     * @return a new {@link HttpHost} instance with the same address but the specified port.
+     */
     @Override
     public @NotNull HttpHost<T> clone(@Nullable Port newPort) {
         //noinspection unchecked
-        return new HttpHost<>((T) getAddress().clone(), newPort, getProtocol());
-    }
-
-    // Classes
-
-    /**
-     * Enum representing HTTP protocols, either HTTP or HTTPS.
-     */
-    public enum Protocol {
-
-        HTTP("http://"),
-        HTTPS("https://");
-
-        private final @NotNull String representation;
-
-        Protocol(@NotNull String representation) {
-            this.representation = representation;
-        }
-
-        @Override
-        public @NotNull String toString() {
-            return representation;
-        }
+        return new HttpHost<>((T) getAddress().clone(), newPort);
     }
 
 }

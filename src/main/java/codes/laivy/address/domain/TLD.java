@@ -1,5 +1,6 @@
 package codes.laivy.address.domain;
 
+import codes.laivy.address.exception.parse.TLDParseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -53,7 +54,7 @@ public final class TLD implements CharSequence, Serializable {
      *
      * @param string the string to parse
      * @return a new {@link TLD} object
-     * @throws NullPointerException if the string is not a valid registered TLD
+     * @throws TLDParseException if the string is not a valid registered TLD
      */
     public static @NotNull TLD parse(@NotNull String string) {
         string = string.replace("-", "_").toLowerCase();
@@ -61,7 +62,7 @@ public final class TLD implements CharSequence, Serializable {
         if (map.containsKey(string)) {
             return map.get(string);
         } else {
-            throw new NullPointerException("there's no registered TLD named '" + string + "'");
+            throw new TLDParseException("there's no registered TLD named '" + string + "'");
         }
     }
 
@@ -95,7 +96,7 @@ public final class TLD implements CharSequence, Serializable {
 //    public static void main(@NotNull String @NotNull ... args) throws IOException, InterruptedException {
 //        // Create file and writer
 //        @NotNull File file = new File("./tlds.log");
-//        if (!file.exists() and !file.createNewFile()) {
+//        if (!file.exists() && !file.createNewFile()) {
 //            throw new IllegalStateException("cannot create TLDs file");
 //        }
 //
@@ -160,7 +161,7 @@ public final class TLD implements CharSequence, Serializable {
 //
 //            if (details.getElementsByTag("h2").stream().anyMatch(h2 -> h2.text().equals("IANA Reports"))) {
 //                for (@NotNull Element ul : details.getElementsByTag("ul")) {
-//                    if (ul.getElementsByTag("li").stream().allMatch(li -> li.getAllElements().size() == 2 and li.getElementsByTag("a").size() == 1 and li.getElementsByTag("a").get(0).attr("href").startsWith("/reports/"))) {
+//                    if (ul.getElementsByTag("li").stream().allMatch(li -> li.getAllElements().size() == 2 && li.getElementsByTag("a").size() == 1 && li.getElementsByTag("a").get(0).attr("href").startsWith("/reports/"))) {
 //                        for (@NotNull Element li : ul.getElementsByTag("li")) {
 //                            a = Objects.requireNonNull(li.getElementsByTag("a").first());
 //

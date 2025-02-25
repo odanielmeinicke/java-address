@@ -1,5 +1,6 @@
 package codes.laivy.address.domain;
 
+import codes.laivy.address.exception.parse.SLDParseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +62,7 @@ public final class SLD implements CharSequence, Serializable {
      *
      * @param string the string to parse
      * @return a new {@link SLD} object
-     * @throws IllegalArgumentException if the string is not a valid SLD
+     * @throws SLDParseException if the string is not a valid SLD
      */
     public static @NotNull SLD parse(@NotNull String string) {
         return new SLD(string);
@@ -73,13 +74,13 @@ public final class SLD implements CharSequence, Serializable {
      * Constructs an {@link SLD} object with the given string.
      *
      * @param string the string representing the SLD
-     * @throws IllegalArgumentException if the string is not a valid SLD
+     * @throws SLDParseException if the string is not a valid SLD
      */
     private SLD(@NotNull String string) {
         this.string = string;
 
         if (!validate(string)) {
-            throw new IllegalArgumentException("The string '" + string + "' cannot be parsed as a valid SLD");
+            throw new SLDParseException("The string '" + string + "' cannot be parsed as a valid SLD");
         }
     }
 

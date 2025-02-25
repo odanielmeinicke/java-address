@@ -1,5 +1,6 @@
 package codes.laivy.address.domain;
 
+import codes.laivy.address.exception.parse.SubdomainParseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +67,7 @@ public final class Subdomain implements CharSequence, Serializable {
      *
      * @param string the string to create the subdomain from
      * @return a new {@link Subdomain} instance
-     * @throws IllegalArgumentException if the string is not a valid subdomain
+     * @throws SubdomainParseException if the string is not a valid subdomain
      */
     public static @NotNull Subdomain create(@NotNull String string) {
         return new Subdomain(string);
@@ -86,7 +87,7 @@ public final class Subdomain implements CharSequence, Serializable {
         this.content = content;
 
         if (!validate(content)) {
-            throw new IllegalArgumentException("cannot parse '" + content + "' as a valid subdomain");
+            throw new SubdomainParseException("cannot parse '" + content + "' as a valid subdomain");
         }
     }
 
