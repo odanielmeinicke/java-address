@@ -29,7 +29,7 @@ import java.net.UnknownHostException;
  * </p>
  */
 // todo: Address#localhost method
-public interface Address extends Serializable, Cloneable {
+public interface Address extends Serializable {
 
     /**
      * The main method used for loading classes or testing purposes.
@@ -166,10 +166,4 @@ public interface Address extends Serializable, Cloneable {
         return !isLocal();
     }
 
-    /**
-     * Creates and returns a copy of this address.
-     *
-     * @return a clone of this address.
-     */
-    @NotNull Address clone();
 }

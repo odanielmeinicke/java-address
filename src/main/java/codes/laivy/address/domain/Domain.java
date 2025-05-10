@@ -33,6 +33,7 @@ import java.util.Objects;
  * @see TLD
  * @see Subdomain
  */
+// todo: Domain does not have Port! Request a creation of a DomainAddress instead!
 public final class Domain implements Address, HttpAddress {
 
     // Static initializers

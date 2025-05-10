@@ -7,6 +7,7 @@ import codes.laivy.address.exception.parse.EmailParseException;
 import codes.laivy.address.exception.parse.SLDParseException;
 import codes.laivy.address.exception.parse.TLDParseException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -132,10 +133,10 @@ public class Email implements CharSequence {
     // Implementations
 
     @Override
-    public final boolean equals(Object object) {
+    public final boolean equals(@Nullable Object object) {
         if (this == object) return true;
         if (!(object instanceof Email)) return false;
-        Email email = (Email) object;
+        @NotNull Email email = (Email) object;
         return Objects.equals(getUsername(), email.getUsername()) && Objects.deepEquals(getSubdomains(), email.getSubdomains()) && Objects.equals(getSLD(), email.getSLD()) && Objects.equals(getTLD(), email.getTLD());
     }
     @Override
