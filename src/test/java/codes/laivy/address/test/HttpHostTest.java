@@ -41,8 +41,8 @@ public class HttpHostTest {
     @Test
     void string() {
         for (@NotNull String string : valids()) {
-            @NotNull HttpHost<?> host = HttpHost.parse(string);
-            @NotNull HttpHost<?> clone = HttpHost.parse(host.toString());
+            @NotNull HttpHost host = HttpHost.parse(string);
+            @NotNull HttpHost clone = HttpHost.parse(host.toString());
 
             Assertions.assertEquals(host, clone);
         }
@@ -50,8 +50,8 @@ public class HttpHostTest {
     @Test
     void name() {
         for (@NotNull String string : valids()) {
-            @NotNull HttpHost<?> host = HttpHost.parse(string);
-            @NotNull HttpHost<?> clone = HttpHost.parse(host.toString());
+            @NotNull HttpHost host = HttpHost.parse(string);
+            @NotNull HttpHost clone = HttpHost.parse(host.toString());
 
             Assertions.assertEquals(host.toString(), clone.toString());
         }
